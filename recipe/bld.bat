@@ -44,8 +44,8 @@ rem --- 4. register kept clusters ------------------------------------------
 rem --- 6. activate/deactivate hooks ---------------------------------------
 mkdir "%PREFIX%\etc\conda\activate.d"   2>nul
 mkdir "%PREFIX%\etc\conda\deactivate.d" 2>nul
-copy /y "%RECIPE_DIR%\activate\snap-gpt-activate.bat"   "%PREFIX%\etc\conda\activate.d\snap-gpt.bat"   >nul
-copy /y "%RECIPE_DIR%\activate\snap-gpt-deactivate.bat" "%PREFIX%\etc\conda\deactivate.d\snap-gpt.bat" >nul
+copy /y "%RECIPE_DIR%\activate.bat"   "%PREFIX%\etc\conda\activate.d\snap-gpt.bat"   >nul
+copy /y "%RECIPE_DIR%\deactivate.bat" "%PREFIX%\etc\conda\deactivate.d\snap-gpt.bat" >nul
 
 rem --- 7. NOTICE ----------------------------------------------------------
 mkdir "%PREFIX%\share\snap-gpt" 2>nul

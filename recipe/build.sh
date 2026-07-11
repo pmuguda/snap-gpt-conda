@@ -84,8 +84,8 @@ fi
 # 6. Install activate/deactivate hooks (PATH + JDK override; pyroSAR-friendly)
 # ---------------------------------------------------------------------------
 mkdir -p "${PREFIX}/etc/conda/activate.d" "${PREFIX}/etc/conda/deactivate.d"
-cp "${RECIPE_DIR}/activate/snap-gpt-activate.sh"   "${PREFIX}/etc/conda/activate.d/snap-gpt.sh"
-cp "${RECIPE_DIR}/activate/snap-gpt-deactivate.sh" "${PREFIX}/etc/conda/deactivate.d/snap-gpt.sh"
+cp "${RECIPE_DIR}/activate.sh"   "${PREFIX}/etc/conda/activate.d/snap-gpt.sh"
+cp "${RECIPE_DIR}/deactivate.sh" "${PREFIX}/etc/conda/deactivate.d/snap-gpt.sh"
 
 # ---------------------------------------------------------------------------
 # 7. Corresponding-source / attribution NOTICE inside the package (GPLv3)
