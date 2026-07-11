@@ -1,0 +1,20 @@
+# Build outputs
+/out/
+/dist/
+*.conda
+*.tar.bz2
+
+# Downloaded installers (never commit ~1GB ESA installers)
+*.sh.download
+*.dmg
+*.exe
+installer/
+installer_licenses/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# OS
+.DS_Store

@@ -1,0 +1,33 @@
+snap-gpt-conda
+Copyright 2026 snap-gpt-conda maintainers
+
+This product includes software developed as packaging tooling (the conda recipe,
+build scripts, and CI in this repository), licensed under the Apache License,
+Version 2.0 (see LICENSE).
+
+--------------------------------------------------------------------------------
+The PACKAGED SOFTWARE is NOT covered by the Apache-2.0 license above.
+--------------------------------------------------------------------------------
+
+The conda packages produced by this repository bundle the ESA Sentinel Application
+Platform (SNAP) and its SAR toolboxes:
+
+  - SNAP (snap-engine, snap-desktop)
+  - Sentinel-1 Toolbox (s1tbx)
+  - Radar/Polarimetric Toolbox (rstb)
+
+SNAP is developed by the European Space Agency (ESA) and contributors, including
+Brockmann Consult GmbH, SkyWatch, and CS Group, and is distributed under the
+GNU General Public License, version 3 (GPL-3.0). Bundled third-party components
+are listed with their individual licenses in THIRDPARTY_LICENSES.txt (shipped
+inside each package under opt/snap/).
+
+The packages contain a PRUNED SUBSET of the official ESA SNAP "sentinel"
+distribution (the optical Sentinel-2/3 toolboxes and the bundled JRE are removed);
+SNAP's source code is redistributed UNMODIFIED. Corresponding source (GPL-3.0 §6)
+is available at https://github.com/senbox-org using the release tag matching the
+packaged version. A written offer for the corresponding source is available via
+https://github.com/pmuguda/snap-gpt-conda .
+
+This project is NOT affiliated with or endorsed by the European Space Agency.
+"SNAP", "Sentinel", and "ESA" are the property of their respective owners.

@@ -1,0 +1,85 @@
+{% set snap_version = environ.get('SNAP_VERSION', '13.0.0') %}
+{% set installer_url = environ.get('SNAP_INSTALLER_URL', '') %}
+{% set installer_sha = environ.get('SNAP_INSTALLER_SHA256', '') %}
+{% set jdk = environ.get('SNAP_JDK', '11') %}
+
+# snap-gpt — headless ESA SNAP Graph Processing Tool (gpt), full SAR stack.
+#
+# This recipe is driven by environment variables produced from ../versions.yaml
+# by scripts/resolve.py, so the version table lives in exactly one place:
+#
+#     eval "$(python scripts/resolve.py 13.0.0 osx-arm64)"
+#     conda build recipe/
+#
+# The `source` is ESA's official install4j installer (NOT an archive); conda-build
+# copies it into the work dir and build.sh / bld.bat run it unattended, then prune
+# to the SAR stack. See ../versions.yaml and the plan for the full rationale.
+
+package:
+  name: snap-gpt
+  version: {{ snap_version }}
+
+source:
+  url: {{ installer_url }}
+  sha256: {{ installer_sha }}
+  # Keep the installer as-is inside work/installer/ (do not try to unpack it).
+  folder: installer
+  no_hoist: true
+
+build:
+  number: 0
+  # Native binaries → strictly per-platform; never noarch. Also not relocatable
+  # as a pure-Python package, but conda's prefix replacement handles our text
+  # configs + activate scripts.
+  binary_relocation: false
+  missing_dso_whitelist:
+    - '*'          # SNAP ships/needs its own bundled native libs; don't audit them
+  # Skip on subdirs we don't target.
+  skip: true  # [not (linux64 or win64 or osx)]
+
+requirements:
+  build:
+    - python                     # for scripts run during build (yaml parsing)
+    - pyyaml
+  run:
+    - openjdk {{ jdk }}.*        # the JVM gpt/snap use (via INSTALL4J_JAVA_HOME_OVERRIDE)
+
+test:
+  # conda-build activates the test env, so our activate.d runs and puts the real
+  # gpt/snap on PATH with the JDK override set.
+  commands:
+    - gpt -h                                                      # [not win]
+    - gpt -h                                                      # [win]
+    # SAR operators must resolve from every kept cluster:
+    - gpt Calibration -h                                         # [unix]
+    - gpt Terrain-Correction -h                                  # [unix]
+    - gpt Polarimetric-Decomposition -h                         # [unix]
+    # pyroSAR-style locate check: snap launcher discoverable beside gpt + etc/ present
+    - test -f "$PREFIX/opt/snap/bin/snap"                        # [unix]
+    - test -f "$PREFIX/opt/snap/etc/snap.auxdata.properties"     # [unix]
+
+about:
+  home: https://step.esa.int/main/toolboxes/snap/
+  license: GPL-3.0-or-later
+  license_family: GPL
+  # Both files are copied into $PREFIX/opt/snap by the installer; ship them.
+  license_file:
+    - installer_licenses/LICENSE.txt
+    - installer_licenses/THIRDPARTY_LICENSES.txt
+  summary: >
+    Headless ESA SNAP Graph Processing Tool (gpt) with the full SAR stack
+    (snap engine + s1tbx + rstb): all SAR sensors, calibration, SAR processing,
+    InSAR, polarimetry, classification. No GUI installer, no Docker, no snappy/jpy.
+  description: >
+    Unofficial community repackaging of the ESA Sentinel Application Platform
+    (SNAP) that exposes only the headless `gpt` command-line tool, using this
+    conda environment's own `openjdk`. The optical Sentinel-2/3 toolboxes are
+    pruned; the SAR stack is kept intact and the standard install layout is
+    preserved so tools like pyroSAR auto-detect it. SNAP is developed by ESA and
+    contributors and licensed under GPL-3.0. This package is NOT affiliated with
+    or endorsed by ESA. See NOTICE for attribution and corresponding-source links.
+  dev_url: https://github.com/pmuguda/snap-gpt-conda
+
+extra:
+  recipe-maintainers:
+    - pmuguda
