@@ -103,9 +103,8 @@ jobs:
             ${{ runner.temp }}/out/**/*.tar.bz2
           if-no-files-found: error
 
-      - name: pyroSAR auto-detect check (non-blocking, unix)
+      - name: pyroSAR auto-detect check (unix)
         if: steps.resolve.outputs.skip != 'true' && runner.os != 'Windows'
-        continue-on-error: true
         run: |
           conda create -y -n verify -c "file://${{ runner.temp }}/out" -c conda-forge esa-snap-s1tbx-gpt pyrosar
           conda run -n verify python tests/test_pyrosar.py
