@@ -84,7 +84,7 @@ jobs:
       - name: conda build
         if: steps.resolve.outputs.skip != 'true'
         run: |
-          python -m conda_build.cli.main_build recipe/ \
+          conda-build recipe/ \
             --no-anaconda-upload \
             --output-folder "${{ runner.temp }}/out"
 

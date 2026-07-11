@@ -9,7 +9,7 @@
 # by scripts/resolve.py, so the version table lives in exactly one place:
 #
 #     eval "$(python scripts/resolve.py 13.0.0 osx-arm64)"
-#     python -m conda_build.cli.main_build recipe/
+#     conda-build recipe/
 #
 # The `source` is ESA's official install4j installer (NOT an archive); conda-build
 # copies it into the work dir and build.sh / bld.bat run it unattended, then prune

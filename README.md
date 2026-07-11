@@ -71,7 +71,7 @@ To build one package locally:
 conda install -n base conda-build pyyaml ruamel.yaml
 python scripts/compute-hashes.py --only 13.0.0/osx-arm64   # fill the real sha256
 eval "$(python scripts/resolve.py 13.0.0 osx-arm64)"       # export build env vars
-python -m conda_build.cli.main_build recipe/
+conda-build recipe/
 ```
 
 Add a new SNAP version = one entry in `versions.yaml` + `compute-hashes.py` + add it
