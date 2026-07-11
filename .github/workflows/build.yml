@@ -88,12 +88,19 @@ jobs:
             --no-anaconda-upload \
             --output-folder "${{ runner.temp }}/out"
 
+      - name: List build output
+        if: steps.resolve.outputs.skip != 'true'
+        run: |
+          find "${{ runner.temp }}/out" -type f -print
+
       - name: Upload build artifact
         if: steps.resolve.outputs.skip != 'true'
         uses: actions/upload-artifact@v4
         with:
           name: esa-snap-s1tbx-gpt-${{ matrix.snap }}-${{ matrix.target.subdir }}
-          path: ${{ runner.temp }}/out/**/*.conda
+          path: |
+            ${{ runner.temp }}/out/**/*.conda
+            ${{ runner.temp }}/out/**/*.tar.bz2
           if-no-files-found: error
 
       - name: pyroSAR auto-detect check (non-blocking, unix)
@@ -109,7 +116,7 @@ jobs:
           ANACONDA_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
         run: |
           test -n "$ANACONDA_TOKEN" || { echo "ANACONDA_TOKEN not set"; exit 1; }
-          find "${{ runner.temp }}/out" -name '*.conda' -exec \
+          find "${{ runner.temp }}/out" \( -name '*.conda' -o -name '*.tar.bz2' \) -exec \
             anaconda -t "$ANACONDA_TOKEN" upload --force --no-progress {} +
 
   release:
@@ -121,5 +128,7 @@ jobs:
         with: { path: dist, merge-multiple: true }
       - uses: softprops/action-gh-release@v2
         with:
-          files: dist/**/*.conda
+          files: |
+            dist/**/*.conda
+            dist/**/*.tar.bz2
           generate_release_notes: true
