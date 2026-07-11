@@ -2,7 +2,7 @@
 """Resolve the installer for a (SNAP version, conda subdir) into build env vars.
 
 Reads ``versions.yaml`` and prints shell ``KEY=VALUE`` lines that both the local
-build and CI ``eval`` before calling ``conda build``. Keeps ``versions.yaml`` as
+build and CI ``eval`` before calling ``python -m conda_build.cli.main_build``. Keeps ``versions.yaml`` as
 the single source of truth so the recipe never hardcodes URLs/hashes.
 
 Usage:

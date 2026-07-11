@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""pyroSAR acceptance test for snap-gpt (the real bar).
+"""pyroSAR acceptance test for esa-snap-s1tbx-gpt (the real bar).
 
-Run inside a conda env that has BOTH `snap-gpt` and `pyrosar` installed and is
-ACTIVATED (so snap-gpt's activate.d put snap/gpt on PATH):
+Run inside a conda env that has BOTH `esa-snap-s1tbx-gpt` and `pyrosar` installed
+and is ACTIVATED (so the package's activate.d put snap/gpt on PATH):
 
-    conda create -n snap-gpt-test -c conda-forge -c pmuguda snap-gpt pyrosar
-    conda activate snap-gpt-test
+    conda create -n esa-snap-s1tbx-gpt-test -c conda-forge -c sarforge esa-snap-s1tbx-gpt pyrosar
+    conda activate esa-snap-s1tbx-gpt-test
     python tests/test_pyrosar.py
 
 Passes if pyroSAR auto-detects our SNAP install (no hand-written ~/.pyrosar

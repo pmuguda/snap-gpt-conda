@@ -1,6 +1,6 @@
 @echo off
 setlocal enabledelayedexpansion
-rem Build snap-gpt on Windows: unattended SNAP install -> prune -> wire conda JDK.
+rem Build esa-snap-s1tbx-gpt on Windows: unattended SNAP install -> prune -> wire conda JDK.
 rem The installer (.exe) is fetched by conda-build as `source` into %SRC_DIR%\installer\.
 
 set "SNAP_DEST=%PREFIX%\opt\snap"
@@ -44,17 +44,17 @@ rem --- 4. register kept clusters ------------------------------------------
 rem --- 6. activate/deactivate hooks ---------------------------------------
 mkdir "%PREFIX%\etc\conda\activate.d"   2>nul
 mkdir "%PREFIX%\etc\conda\deactivate.d" 2>nul
-copy /y "%RECIPE_DIR%\activate.bat"   "%PREFIX%\etc\conda\activate.d\snap-gpt.bat"   >nul
-copy /y "%RECIPE_DIR%\deactivate.bat" "%PREFIX%\etc\conda\deactivate.d\snap-gpt.bat" >nul
+copy /y "%RECIPE_DIR%\activate.bat"   "%PREFIX%\etc\conda\activate.d\esa-snap-s1tbx-gpt.bat"   >nul
+copy /y "%RECIPE_DIR%\deactivate.bat" "%PREFIX%\etc\conda\deactivate.d\esa-snap-s1tbx-gpt.bat" >nul
 
 rem --- 7. NOTICE ----------------------------------------------------------
-mkdir "%PREFIX%\share\snap-gpt" 2>nul
+mkdir "%PREFIX%\share\esa-snap-s1tbx-gpt" 2>nul
 (
-  echo snap-gpt %SNAP_VERSION% - unofficial community repackaging of ESA SNAP.
+  echo esa-snap-s1tbx-gpt %SNAP_VERSION% - unofficial community repackaging of ESA SNAP.
   echo Subset of the official ESA SNAP "sentinel" distribution; optical s2tbx/s3tbx
   echo and the bundled JRE removed; SNAP source unmodified. GPL-3.0.
   echo Corresponding source: https://github.com/senbox-org  ^(tag matching %SNAP_VERSION%^).
   echo NOT affiliated with or endorsed by ESA.
-) > "%PREFIX%\share\snap-gpt\NOTICE.txt"
+) > "%PREFIX%\share\esa-snap-s1tbx-gpt\NOTICE.txt"
 
-echo snap-gpt build complete: %SNAP_DEST%
+echo esa-snap-s1tbx-gpt build complete: %SNAP_DEST%
