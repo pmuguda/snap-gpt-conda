@@ -4,6 +4,7 @@ name: build
 # runners, then publish to the anaconda.org channel and attach to the Release.
 #
 # Required repo secret: ANACONDA_TOKEN (a token for the target anaconda.org channel).
+# Target anaconda.org owner/channel: sarforge.
 # Trigger a full publish by pushing a tag like `v13.0.0-1`, or run manually.
 
 on:
@@ -113,10 +114,12 @@ jobs:
         if: steps.resolve.outputs.skip != 'true' && (github.event.inputs.publish == 'true' || startsWith(github.ref, 'refs/tags/'))
         env:
           ANACONDA_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
+          ANACONDA_OWNER: ${{ secrets.ANACONDA_OWNER }}
         run: |
           test -n "$ANACONDA_TOKEN" || { echo "ANACONDA_TOKEN not set"; exit 1; }
+          test -n "$ANACONDA_OWNER" || { echo "ANACONDA_OWNER not set"; exit 1; }
           find "${{ runner.temp }}/out" \( -name '*.conda' -o -name '*.tar.bz2' \) -exec \
-            anaconda -t "$ANACONDA_TOKEN" upload --force --no-progress {} +
+            anaconda -t "$ANACONDA_TOKEN" upload --user "$ANACONDA_OWNER" --force --no-progress {} +
 
   release:
     needs: build
