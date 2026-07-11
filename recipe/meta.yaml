@@ -3,20 +3,20 @@
 {% set installer_sha = environ.get('SNAP_INSTALLER_SHA256', '') %}
 {% set jdk = environ.get('SNAP_JDK', '11') %}
 
-# snap-gpt — headless ESA SNAP Graph Processing Tool (gpt), full SAR stack.
+# esa-snap-s1tbx-gpt — headless ESA SNAP Graph Processing Tool (gpt), S1TBX/SAR stack.
 #
 # This recipe is driven by environment variables produced from ../versions.yaml
 # by scripts/resolve.py, so the version table lives in exactly one place:
 #
 #     eval "$(python scripts/resolve.py 13.0.0 osx-arm64)"
-#     conda build recipe/
+#     python -m conda_build.cli.main_build recipe/
 #
 # The `source` is ESA's official install4j installer (NOT an archive); conda-build
 # copies it into the work dir and build.sh / bld.bat run it unattended, then prune
 # to the SAR stack. See ../versions.yaml and the plan for the full rationale.
 
 package:
-  name: snap-gpt
+  name: esa-snap-s1tbx-gpt
   version: {{ snap_version }}
 
 source:
@@ -69,7 +69,7 @@ about:
     - installer_licenses/LICENSE.txt
     - installer_licenses/THIRDPARTY_LICENSES.txt
   summary: >
-    Headless ESA SNAP Graph Processing Tool (gpt) with the full SAR stack
+    Headless ESA SNAP Graph Processing Tool (gpt) with the Sentinel-1/SAR stack
     (snap engine + s1tbx + rstb): all SAR sensors, calibration, SAR processing,
     InSAR, polarimetry, classification. No GUI installer, no Docker, no snappy/jpy.
   description: >

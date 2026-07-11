@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# Build snap-gpt on Linux and macOS:
+# Build esa-snap-s1tbx-gpt on Linux and macOS:
 #   install ESA SNAP unattended -> prune to the SAR stack -> wire up conda's JDK.
 # The installer is fetched by conda-build as `source` (see meta.yaml) and lives in
 # ${SRC_DIR}/installer/. Env vars (SNAP_VERSION, SNAP_INSTALLER_FILE, ...) come
-# from scripts/resolve.py via `eval` before `conda build`.
+# from scripts/resolve.py via `eval` before the conda-build CLI.
 set -euxo pipefail
 
 SNAP_DEST="${PREFIX}/opt/snap"
@@ -84,15 +84,15 @@ fi
 # 6. Install activate/deactivate hooks (PATH + JDK override; pyroSAR-friendly)
 # ---------------------------------------------------------------------------
 mkdir -p "${PREFIX}/etc/conda/activate.d" "${PREFIX}/etc/conda/deactivate.d"
-cp "${RECIPE_DIR}/activate.sh"   "${PREFIX}/etc/conda/activate.d/snap-gpt.sh"
-cp "${RECIPE_DIR}/deactivate.sh" "${PREFIX}/etc/conda/deactivate.d/snap-gpt.sh"
+cp "${RECIPE_DIR}/activate.sh"   "${PREFIX}/etc/conda/activate.d/esa-snap-s1tbx-gpt.sh"
+cp "${RECIPE_DIR}/deactivate.sh" "${PREFIX}/etc/conda/deactivate.d/esa-snap-s1tbx-gpt.sh"
 
 # ---------------------------------------------------------------------------
 # 7. Corresponding-source / attribution NOTICE inside the package (GPLv3)
 # ---------------------------------------------------------------------------
-mkdir -p "${PREFIX}/share/snap-gpt"
-cat > "${PREFIX}/share/snap-gpt/NOTICE.txt" <<EOF
-snap-gpt ${SNAP_VERSION:-unknown} — unofficial community repackaging of ESA SNAP.
+mkdir -p "${PREFIX}/share/esa-snap-s1tbx-gpt"
+cat > "${PREFIX}/share/esa-snap-s1tbx-gpt/NOTICE.txt" <<EOF
+esa-snap-s1tbx-gpt ${SNAP_VERSION:-unknown} — unofficial community repackaging of ESA SNAP.
 
 This package contains a SUBSET of the official ESA SNAP ${SNAP_VERSION:-} "sentinel"
 distribution: the optical Sentinel-2/3 toolboxes (s2tbx/s3tbx) and the bundled JRE
@@ -110,4 +110,4 @@ https://github.com/pmuguda/snap-gpt-conda .
 NOT affiliated with or endorsed by ESA.
 EOF
 
-echo "snap-gpt build complete: ${SNAP_DEST}"
+echo "esa-snap-s1tbx-gpt build complete: ${SNAP_DEST}"

@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-# Convenience: build one snap-gpt package locally for the current platform.
+# Convenience: build one esa-snap-s1tbx-gpt package locally for the current platform.
 #
 #   scripts/build-local.sh 13.0.0            # auto-detect this machine's subdir
 #   scripts/build-local.sh 13.0.0 osx-arm64  # explicit subdir
 #
-# Requires: conda-build, pyyaml, ruamel.yaml in the active env (or base).
+# Requires: conda-build, pyyaml, ruamel.yaml in the active env.
 set -euo pipefail
 
 VERSION="${1:?usage: build-local.sh <snap_version> [conda_subdir]}"
@@ -29,8 +29,8 @@ echo ">> resolving build env"
 eval "$(python scripts/resolve.py "${VERSION}" "${SUBDIR}")"
 
 echo ">> conda build (SNAP ${SNAP_VERSION}, ${SUBDIR})"
-conda build recipe/ --output-folder "${ROOT}/out"
+python -m conda_build.cli.main_build recipe/ --output-folder "${ROOT}/out"
 
 echo ">> done. Test with:"
-echo "   conda create -n snap-gpt-test -c conda-forge --use-local snap-gpt=${VERSION}"
-echo "   conda activate snap-gpt-test && gpt -h"
+echo "   conda create -n esa-snap-s1tbx-gpt-test -c conda-forge --use-local esa-snap-s1tbx-gpt=${VERSION}"
+echo "   conda activate esa-snap-s1tbx-gpt-test && gpt -h"

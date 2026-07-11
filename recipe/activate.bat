@@ -1,5 +1,5 @@
 @echo off
-rem snap-gpt: expose the real SNAP bin\ (snap.exe + gpt.exe) and pin the JVM.
+rem esa-snap-s1tbx-gpt: expose the real SNAP bin\ (snap.exe + gpt.exe) and pin the JVM.
 set "SNAP_HOME=%CONDA_PREFIX%\opt\snap"
 set "PATH=%SNAP_HOME%\bin;%PATH%"
 

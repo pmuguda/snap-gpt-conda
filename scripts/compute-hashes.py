@@ -36,7 +36,7 @@ import os
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 VERSIONS_YAML = os.path.join(os.path.dirname(HERE), "versions.yaml")
-UA = {"User-Agent": "snap-gpt-conda/compute-hashes"}
+UA = {"User-Agent": "esa-snap-s1tbx-gpt/compute-hashes"}
 
 
 def _load():

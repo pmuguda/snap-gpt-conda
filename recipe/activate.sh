@@ -1,5 +1,5 @@
 #!/bin/sh
-# snap-gpt: put the real SNAP bin/ (with snap + gpt) on PATH and pin the JVM.
+# esa-snap-s1tbx-gpt: put the real SNAP bin/ (with snap + gpt) on PATH and pin the JVM.
 #
 # We deliberately expose the REAL binaries (not a wrapper shim) so that tools
 # like pyroSAR, which locate SNAP by finding `snap` on PATH and then resolving

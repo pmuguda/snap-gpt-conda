@@ -1,4 +1,4 @@
-# versions.yaml — single source of truth for snap-gpt conda packaging.
+# versions.yaml — single source of truth for esa-snap-s1tbx-gpt conda packaging.
 #
 # One entry per supported stable SNAP release. For each release we record the
 # official ESA install4j installer filename per conda subdir, its sha256, and
