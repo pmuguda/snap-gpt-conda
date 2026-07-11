@@ -2,6 +2,7 @@
 {% set installer_url = environ.get('SNAP_INSTALLER_URL', '') %}
 {% set installer_sha = environ.get('SNAP_INSTALLER_SHA256', '') %}
 {% set jdk = environ.get('SNAP_JDK', '11') %}
+{% set build_number = environ.get('SNAP_BUILD_NUMBER', '0') %}
 
 # esa-snap-s1tbx-gpt — headless ESA SNAP Graph Processing Tool (gpt), S1TBX/SAR stack.
 #
@@ -30,7 +31,7 @@ source:
   folder: installer
 
 build:
-  number: 0
+  number: {{ build_number }}
   # Native binaries → strictly per-platform; never noarch. Also not relocatable
   # as a pure-Python package, but conda's prefix replacement handles our text
   # configs + activate scripts.

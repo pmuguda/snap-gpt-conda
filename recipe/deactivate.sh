@@ -6,4 +6,5 @@ if [ -n "${SNAP_HOME}" ]; then
   export PATH
 fi
 unset SNAP_HOME
+unset INSTALL4J_JAVA_HOME
 unset INSTALL4J_JAVA_HOME_OVERRIDE

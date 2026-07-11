@@ -5,4 +5,7 @@ set "PATH=%SNAP_HOME%\bin;%PATH%"
 
 rem If a conda JDK is present (JAVA_HOME set by an openjdk package), use it;
 rem otherwise leave it unset so SNAP's own bundled JRE (kept on Windows) is used.
-if defined JAVA_HOME set "INSTALL4J_JAVA_HOME_OVERRIDE=%JAVA_HOME%"
+if defined JAVA_HOME (
+  set "INSTALL4J_JAVA_HOME=%JAVA_HOME%"
+  set "INSTALL4J_JAVA_HOME_OVERRIDE=%JAVA_HOME%"
+)
