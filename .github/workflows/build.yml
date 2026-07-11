@@ -62,7 +62,11 @@ jobs:
           channels: conda-forge
 
       - name: Install build tooling
-        run: conda install -y conda-build pyyaml ruamel.yaml anaconda-client
+        run: |
+          # conda-build must live in BASE for the `conda build` subcommand to register.
+          conda install -n base -y conda-build anaconda-client
+          # pyyaml/ruamel go in the active env for resolve.py / compute-hashes.py.
+          conda install -y pyyaml ruamel.yaml
 
       - name: Resolve installer (skip absent cells)
         id: resolve
