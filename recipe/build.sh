@@ -61,15 +61,34 @@ rm -rf "${SNAP_DEST}/jre" "${SNAP_DEST}/jbr" \
        "${SNAP_DEST}/.install4j/jre.bundle" 2>/dev/null || true
 
 # ---------------------------------------------------------------------------
-# 4. Register only the kept clusters. SNAP 13+ places shared SAR classes under
-#    microwavetbx, so keep it when the installer provides it.
+# 4. Register the installer-provided clusters that still exist after pruning.
+#    SNAP cluster names/layout changed across 9-13, so keep the installer's
+#    dependency order instead of guessing a fixed SAR cluster list.
 # ---------------------------------------------------------------------------
-: > "${SNAP_DEST}/etc/snap.clusters"
-for cluster in etc ide platform bin snap microwavetbx s1tbx rstb; do
-  if [ -d "${SNAP_DEST}/${cluster}" ]; then
-    echo "${cluster}" >> "${SNAP_DEST}/etc/snap.clusters"
-  fi
-done
+CLUSTERS_FILE="${SNAP_DEST}/etc/snap.clusters"
+CLUSTERS_TMP="${CLUSTERS_FILE}.tmp"
+rm -f "${CLUSTERS_TMP}"
+: > "${CLUSTERS_TMP}"
+if [ -f "${CLUSTERS_FILE}" ]; then
+  while IFS= read -r cluster; do
+    [ -n "${cluster}" ] || continue
+    case "${cluster}" in
+      s2tbx|s3tbx|smostbx) continue ;;
+    esac
+    if [ -d "${SNAP_DEST}/${cluster}" ]; then
+      echo "${cluster}" >> "${CLUSTERS_TMP}"
+    fi
+  done < "${CLUSTERS_FILE}"
+else
+  for cluster in etc ide platform bin snap microwavetbx s1tbx rstb; do
+    if [ -d "${SNAP_DEST}/${cluster}" ]; then
+      echo "${cluster}" >> "${CLUSTERS_TMP}"
+    fi
+  done
+fi
+mv "${CLUSTERS_TMP}" "${CLUSTERS_FILE}"
+echo "Registered SNAP clusters:"
+cat "${CLUSTERS_FILE}"
 
 # ---------------------------------------------------------------------------
 # 5. Config tweaks: portable heap default (installer sets -Xmx to a huge value).
