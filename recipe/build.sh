@@ -52,7 +52,8 @@ cp "${SNAP_DEST}/THIRDPARTY_LICENSES.txt" "${SRC_DIR}/installer_licenses/" || tr
 
 # ---------------------------------------------------------------------------
 # 3. Prune to the SAR stack: drop optical toolboxes + the bundled JRE.
-#    Keep: snap (engine), s1tbx (SAR), rstb (polarimetry), platform, ide, bin, etc.
+#    Keep: snap (engine), microwavetbx (shared SAR), s1tbx (SAR), rstb
+#    (polarimetry), platform, ide, bin, etc.
 # ---------------------------------------------------------------------------
 rm -rf "${SNAP_DEST}/s2tbx" "${SNAP_DEST}/s3tbx" "${SNAP_DEST}/smostbx"
 # Remove any bundled JRE — we use this conda env's openjdk.
@@ -60,17 +61,15 @@ rm -rf "${SNAP_DEST}/jre" "${SNAP_DEST}/jbr" \
        "${SNAP_DEST}/.install4j/jre.bundle" 2>/dev/null || true
 
 # ---------------------------------------------------------------------------
-# 4. Register only the kept clusters
+# 4. Register only the kept clusters. SNAP 13+ places shared SAR classes under
+#    microwavetbx, so keep it when the installer provides it.
 # ---------------------------------------------------------------------------
-cat > "${SNAP_DEST}/etc/snap.clusters" <<'EOF'
-etc
-ide
-platform
-bin
-snap
-s1tbx
-rstb
-EOF
+: > "${SNAP_DEST}/etc/snap.clusters"
+for cluster in etc ide platform bin snap microwavetbx s1tbx rstb; do
+  if [ -d "${SNAP_DEST}/${cluster}" ]; then
+    echo "${cluster}" >> "${SNAP_DEST}/etc/snap.clusters"
+  fi
+done
 
 # ---------------------------------------------------------------------------
 # 5. Config tweaks: portable heap default (installer sets -Xmx to a huge value).

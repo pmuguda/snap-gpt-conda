@@ -31,15 +31,10 @@ rmdir /s /q "%SNAP_DEST%\s3tbx"  2>nul
 rmdir /s /q "%SNAP_DEST%\smostbx" 2>nul
 
 rem --- 4. register kept clusters ------------------------------------------
-(
-  echo etc
-  echo ide
-  echo platform
-  echo bin
-  echo snap
-  echo s1tbx
-  echo rstb
-) > "%SNAP_DEST%\etc\snap.clusters"
+type nul > "%SNAP_DEST%\etc\snap.clusters"
+for %%c in (etc ide platform bin snap microwavetbx s1tbx rstb) do (
+  if exist "%SNAP_DEST%\%%c" echo %%c>> "%SNAP_DEST%\etc\snap.clusters"
+)
 
 rem --- 6. activate/deactivate hooks ---------------------------------------
 mkdir "%PREFIX%\etc\conda\activate.d"   2>nul
