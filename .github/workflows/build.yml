@@ -46,7 +46,7 @@ jobs:
         target:
           - { os: ubuntu-latest,  subdir: linux-64 }
           - { os: windows-latest, subdir: win-64 }
-          - { os: macos-13,       subdir: osx-64 }     # Intel
+          - { os: macos-15-intel, subdir: osx-64 }     # Intel
           - { os: macos-14,       subdir: osx-arm64 }  # Apple Silicon
     runs-on: ${{ matrix.target.os }}
     defaults:
