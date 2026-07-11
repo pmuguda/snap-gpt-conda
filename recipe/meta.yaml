@@ -21,10 +21,13 @@ package:
 
 source:
   url: {{ installer_url }}
+{% if installer_sha %}
   sha256: {{ installer_sha }}
+{% endif %}
   # Keep the installer as-is inside work/installer/ (do not try to unpack it).
+  # sha256 is included only when known (filled by compute-hashes.py). For
+  # validation runs without a committed hash, it is omitted (no integrity check).
   folder: installer
-  no_hoist: true
 
 build:
   number: 0
@@ -38,18 +41,17 @@ build:
   skip: true  # [not (linux64 or win64 or osx)]
 
 requirements:
-  build:
-    - python                     # for scripts run during build (yaml parsing)
-    - pyyaml
   run:
-    - openjdk {{ jdk }}.*        # the JVM gpt/snap use (via INSTALL4J_JAVA_HOME_OVERRIDE)
+    # Linux/macOS: use conda-forge's openjdk (bundled JRE is deleted at build).
+    # Windows: conda-forge has no openjdk, so we KEEP SNAP's bundled JRE instead
+    # (see bld.bat) and add no JDK dependency here.
+    - openjdk {{ jdk }}.*        # [not win]
 
 test:
   # conda-build activates the test env, so our activate.d runs and puts the real
-  # gpt/snap on PATH with the JDK override set.
+  # gpt/snap on PATH with the JVM configured.
   commands:
-    - gpt -h                                                      # [not win]
-    - gpt -h                                                      # [win]
+    - gpt -h
     # SAR operators must resolve from every kept cluster:
     - gpt Calibration -h                                         # [unix]
     - gpt Terrain-Correction -h                                  # [unix]

@@ -23,12 +23,12 @@ mkdir "%SRC_DIR%\installer_licenses" 2>nul
 copy /y "%SNAP_DEST%\LICENSE.txt" "%SRC_DIR%\installer_licenses\" >nul 2>&1
 copy /y "%SNAP_DEST%\THIRDPARTY_LICENSES.txt" "%SRC_DIR%\installer_licenses\" >nul 2>&1
 
-rem --- 3. prune optical toolboxes + bundled JRE ---------------------------
+rem --- 3. prune optical toolboxes ONLY ------------------------------------
+rem NOTE: unlike Linux/macOS, we KEEP SNAP's bundled JRE on Windows, because
+rem conda-forge has no Windows openjdk to depend on. SNAP uses its own JRE here.
 rmdir /s /q "%SNAP_DEST%\s2tbx"  2>nul
 rmdir /s /q "%SNAP_DEST%\s3tbx"  2>nul
 rmdir /s /q "%SNAP_DEST%\smostbx" 2>nul
-rmdir /s /q "%SNAP_DEST%\jre"    2>nul
-rmdir /s /q "%SNAP_DEST%\jbr"    2>nul
 
 rem --- 4. register kept clusters ------------------------------------------
 (

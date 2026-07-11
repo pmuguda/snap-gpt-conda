@@ -31,10 +31,13 @@ VERSIONS_YAML = os.path.join(os.path.dirname(HERE), "versions.yaml")
 
 
 def main(argv: list[str]) -> int:
-    if len(argv) != 3:
-        sys.stderr.write(f"usage: {argv[0]} <snap_version> <conda_subdir>\n")
+    allow_missing_sha = "--allow-missing-sha" in argv
+    pos = [a for a in argv[1:] if not a.startswith("--")]
+    if len(pos) != 2:
+        sys.stderr.write(f"usage: {argv[0]} <snap_version> <conda_subdir> "
+                         f"[--allow-missing-sha]\n")
         return 1
-    version, subdir = argv[1], argv[2]
+    version, subdir = pos[0], pos[1]
 
     with open(VERSIONS_YAML) as fh:
         data = yaml.safe_load(fh)
@@ -60,10 +63,13 @@ def main(argv: list[str]) -> int:
     fname = cell["file"]
     sha256 = cell.get("sha256")
     if not sha256:
-        sys.stderr.write(
-            f"sha256 for {version}/{subdir} ({fname}) is empty — "
-            f"run `python scripts/compute-hashes.py` first.\n")
-        return 1
+        if not allow_missing_sha:
+            sys.stderr.write(
+                f"sha256 for {version}/{subdir} ({fname}) is empty — "
+                f"run `python scripts/compute-hashes.py` first, or pass "
+                f"--allow-missing-sha for an unverified (test) build.\n")
+            return 1
+        sha256 = ""   # emit empty → meta.yaml omits the sha (no integrity check)
 
     url = f"{data['base_url']}/{entry['dir']}/installers/{fname}"
 

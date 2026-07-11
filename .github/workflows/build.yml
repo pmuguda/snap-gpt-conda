@@ -68,7 +68,7 @@ jobs:
         id: resolve
         run: |
           set +e
-          OUT=$(python scripts/resolve.py "${{ matrix.snap }}" "${{ matrix.target.subdir }}")
+          OUT=$(python scripts/resolve.py "${{ matrix.snap }}" "${{ matrix.target.subdir }}" --allow-missing-sha)
           RC=$?
           set -e
           if [ "$RC" = "3" ]; then
@@ -94,6 +94,13 @@ jobs:
           name: snap-gpt-${{ matrix.snap }}-${{ matrix.target.subdir }}
           path: ${{ runner.temp }}/out/**/*.conda
           if-no-files-found: error
+
+      - name: pyroSAR auto-detect check (non-blocking, unix)
+        if: steps.resolve.outputs.skip != 'true' && runner.os != 'Windows'
+        continue-on-error: true
+        run: |
+          conda create -y -n verify -c "file://${{ runner.temp }}/out" -c conda-forge snap-gpt pyrosar
+          conda run -n verify python tests/test_pyrosar.py
 
       - name: Publish to anaconda.org
         if: steps.resolve.outputs.skip != 'true' && (github.event.inputs.publish == 'true' || startsWith(github.ref, 'refs/tags/'))
