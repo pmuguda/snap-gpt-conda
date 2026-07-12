@@ -29,19 +29,7 @@ gpt -h
 
 ## Documentation
 
-GitHub Pages documentation is in `docs/`.
-
-- [Documentation index](docs/index.md)
-- [Install and usage](docs/install.md)
-- [Packaging rationale](docs/packaging-rationale.md)
-- [Jupyter usage](docs/jupyter.md)
-- [Maintainer guide](docs/maintainer-guide.md)
-
-After Pages is enabled, the public site is expected at:
-
-```text
-https://pmuguda.github.io/snap-gpt-conda/
-```
+Read the documentation at [pmuguda.github.io/snap-gpt-conda](https://pmuguda.github.io/snap-gpt-conda/).
 
 ## What Is Included
 
