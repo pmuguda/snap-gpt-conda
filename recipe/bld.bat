@@ -30,16 +30,25 @@ rmdir /s /q "%SNAP_DEST%\s2tbx"  2>nul
 rmdir /s /q "%SNAP_DEST%\s3tbx"  2>nul
 rmdir /s /q "%SNAP_DEST%\smostbx" 2>nul
 
-rem --- 4. register kept clusters ------------------------------------------
-(
-  echo etc
-  echo ide
-  echo platform
-  echo bin
-  echo snap
-  echo s1tbx
-  echo rstb
-) > "%SNAP_DEST%\etc\snap.clusters"
+rem --- 4. register installer-provided clusters that survived pruning -------
+set "CLUSTERS_FILE=%SNAP_DEST%\etc\snap.clusters"
+set "CLUSTERS_TMP=%SNAP_DEST%\etc\snap.clusters.tmp"
+del "%CLUSTERS_TMP%" >nul 2>&1
+type nul > "%CLUSTERS_TMP%"
+if exist "%CLUSTERS_FILE%" (
+  for /f "usebackq delims=" %%c in ("%CLUSTERS_FILE%") do (
+    if not "%%c"=="s2tbx" if not "%%c"=="s3tbx" if not "%%c"=="smostbx" (
+      if exist "%SNAP_DEST%\%%c" echo %%c>> "%CLUSTERS_TMP%"
+    )
+  )
+) else (
+  for %%c in (etc ide platform bin snap microwavetbx s1tbx rstb) do (
+    if exist "%SNAP_DEST%\%%c" echo %%c>> "%CLUSTERS_TMP%"
+  )
+)
+move /y "%CLUSTERS_TMP%" "%CLUSTERS_FILE%" >nul
+echo Registered SNAP clusters:
+type "%CLUSTERS_FILE%"
 
 rem --- 6. activate/deactivate hooks ---------------------------------------
 mkdir "%PREFIX%\etc\conda\activate.d"   2>nul
@@ -52,7 +61,7 @@ mkdir "%PREFIX%\share\esa-snap-s1tbx-gpt" 2>nul
 (
   echo esa-snap-s1tbx-gpt %SNAP_VERSION% - unofficial community repackaging of ESA SNAP.
   echo Subset of the official ESA SNAP "sentinel" distribution; optical s2tbx/s3tbx
-  echo and the bundled JRE removed; SNAP source unmodified. GPL-3.0.
+  echo removed. Windows builds keep SNAP's bundled runtime; SNAP source unmodified. GPL-3.0.
   echo Corresponding source: https://github.com/senbox-org  ^(tag matching %SNAP_VERSION%^).
   echo NOT affiliated with or endorsed by ESA.
 ) > "%PREFIX%\share\esa-snap-s1tbx-gpt\NOTICE.txt"

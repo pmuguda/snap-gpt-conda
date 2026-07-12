@@ -3,6 +3,7 @@
 /dist/
 *.conda
 *.tar.bz2
+*.log
 
 # Downloaded installers (never commit ~1GB ESA installers)
 *.sh.download

@@ -2,13 +2,14 @@
 """Resolve the installer for a (SNAP version, conda subdir) into build env vars.
 
 Reads ``versions.yaml`` and prints shell ``KEY=VALUE`` lines that both the local
-build and CI ``eval`` before calling ``python -m conda_build.cli.main_build``. Keeps ``versions.yaml`` as
+build and CI ``eval`` before calling ``conda-build``. Keeps ``versions.yaml`` as
 the single source of truth so the recipe never hardcodes URLs/hashes.
 
 Usage:
     eval "$(python scripts/resolve.py 13.0.0 osx-arm64)"
     # -> exports SNAP_VERSION, SNAP_SUBDIR, SNAP_INSTALLER_URL,
-    #            SNAP_INSTALLER_FILE, SNAP_INSTALLER_SHA256, SNAP_JDK
+    #            SNAP_INSTALLER_FILE, SNAP_INSTALLER_SHA256, SNAP_JDK,
+    #            SNAP_BUILD_NUMBER
 
 Exit codes:
     0  resolved (prints env)
@@ -80,6 +81,7 @@ def main(argv: list[str]) -> int:
         "SNAP_INSTALLER_FILE": fname,
         "SNAP_INSTALLER_SHA256": sha256,
         "SNAP_JDK": str(entry.get("jdk", "11")),
+        "SNAP_BUILD_NUMBER": str(entry.get("build_number", "0")),
     }
     for k, v in out.items():
         print(f"{k}={v}")

@@ -15,9 +15,10 @@ esac
 # openjdk's own activate.d sets JAVA_HOME (sorted before us: 'openjdk' < 'snap');
 # fall back to the conda-forge openjdk location if it isn't set yet.
 if [ -n "${JAVA_HOME}" ]; then
-  export INSTALL4J_JAVA_HOME_OVERRIDE="${JAVA_HOME}"
+  export INSTALL4J_JAVA_HOME="${JAVA_HOME}"
 elif [ -d "${CONDA_PREFIX}/lib/jvm" ]; then
-  export INSTALL4J_JAVA_HOME_OVERRIDE="${CONDA_PREFIX}/lib/jvm"
+  export INSTALL4J_JAVA_HOME="${CONDA_PREFIX}/lib/jvm"
 else
-  export INSTALL4J_JAVA_HOME_OVERRIDE="${CONDA_PREFIX}"
+  export INSTALL4J_JAVA_HOME="${CONDA_PREFIX}"
 fi
+export INSTALL4J_JAVA_HOME_OVERRIDE="${INSTALL4J_JAVA_HOME}"

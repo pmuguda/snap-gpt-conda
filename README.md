@@ -1,101 +1,101 @@
 # esa-snap-s1tbx-gpt
 
-**Headless ESA SNAP `gpt` (Graph Processing Tool), installable with conda alone.**
-No Docker, no GUI installer, no `snappy`/`jpy` bridge — just:
+Headless ESA SNAP `gpt` packaged for conda SAR workflows.
+
+`esa-snap-s1tbx-gpt` repackages the official ESA SNAP installers so users can
+install the Graph Processing Tool (`gpt`) and the Sentinel-1/SAR stack with
+conda. It is meant for reproducible command-line, server, CI, pyroSAR, and
+Jupyter workflows without running the SNAP GUI installer.
 
 ```bash
-conda install -c sarforge -c conda-forge esa-snap-s1tbx-gpt          # newest built SNAP
-conda install -c sarforge -c conda-forge esa-snap-s1tbx-gpt=11.0     # a specific SNAP version
+mamba create -n snap13 -c sarforge -c conda-forge esa-snap-s1tbx-gpt=13.0.0
+conda activate snap13
 gpt -h
 ```
 
-`esa-snap-s1tbx-gpt` repackages the official ESA SNAP distribution into a conda
-package that ships **only the headless `gpt`** command plus the **Sentinel-1/SAR
-stack** — S1TBX, RSTB, SAR sensors, calibration, SAR processing, InSAR, and
-polarimetry — using this conda environment's own `openjdk` as the JVM.
+`conda` works too; `mamba` is just faster at solving large environments.
 
-> **Unofficial.** This project is **not affiliated with or endorsed by ESA.** SNAP
-> is developed by ESA and contributors and licensed under **GPL-3.0**. See
-> [Licensing & attribution](#licensing--attribution).
+> Unofficial packaging. This project is not affiliated with or endorsed by ESA.
+> SNAP is developed by ESA and contributors and is licensed under GPL-3.0. The
+> packaging code in this repository is Apache-2.0.
 
----
+## Documentation
 
-## What's included
+GitHub Pages documentation is in `docs/`.
 
-| Kept (SAR) | Purpose |
-|---|---|
-| `snap` engine | GPF, raster ops, readers/writers |
-| `s1tbx` | **The SAR toolbox** — all-sensor IO (Sentinel-1, ERS, ENVISAT ASAR, RADARSAT-1/2, TerraSAR-X, ALOS PALSAR, Cosmo-SkyMed, RISAT, Kompsat-5, Gaofen-3, PAZ, SAOCOM, NovaSAR, Capella, **ICEYE**), calibration, SAR processing, InSAR (`jlinda`), feature extraction, ocean |
-| `rstb` | Polarimetry — PolSAR decomposition, polarimetric calibration, classification, soil moisture |
+- [Documentation index](docs/index.md)
+- [Install and usage](docs/install.md)
+- [Packaging rationale](docs/packaging-rationale.md)
+- [Jupyter usage](docs/jupyter.md)
+- [Maintainer guide](docs/maintainer-guide.md)
 
-**Pruned:** the optical `s2tbx` (Sentinel-2) and `s3tbx` (Sentinel-3) toolboxes, and
-the installer's bundled JRE. Want optical too? See [Building](#building) — keep those
-clusters for a full-SNAP build.
+After Pages is enabled, the public site is expected at:
 
-## Supported SNAP versions
+```text
+https://pmuguda.github.io/snap-gpt-conda/
+```
 
-`9.0` · `10.0` · `11.0` · `12.0` · `13.0` — pick with
-`esa-snap-s1tbx-gpt=<version>`.
-The conda package version equals the SNAP version. Native Apple-Silicon builds exist
-for recent SNAP; older versions are Intel-only on macOS (run under Rosetta).
+## What Is Included
 
-## Works with pyroSAR
+- SNAP headless runtime layout under `$CONDA_PREFIX/opt/snap`
+- `gpt` and `snap` launchers on `PATH`
+- SAR stack: SNAP engine, `s1tbx`, `rstb`, and shared microwave/SAR support
+- optical `s2tbx`, `s3tbx`, and `smostbx` clusters pruned
+- pyroSAR-friendly install layout
 
-[pyroSAR](https://github.com/johntruckenbrodt/pyroSAR) drives SNAP through `gpt` and
-auto-detects the installation by finding the `snap` launcher on `PATH`.
-`esa-snap-s1tbx-gpt` preserves the standard SNAP install layout (`bin/snap`,
-`bin/gpt`, `etc/*.properties`) and puts the real binaries on `PATH`, so pyroSAR
-detects it with **zero configuration**:
+This package does not provide SNAP's old `snappy`/`jpy` Python-Java bridge. Use
+`gpt` directly, call it from notebooks, or drive it with pyroSAR.
+
+## Published Build Policy
+
+The `sarforge` channel keeps a storage-conscious trusted matrix:
+
+| SNAP version | linux-64 | win-64 | osx-arm64 |
+|---|---:|---:|---:|
+| 9.0.0 | yes | no | no |
+| 10.0.0 | yes | no | no |
+| 11.0.0 | yes | no | no |
+| 12.0.0 | yes | no | no |
+| 13.0.0 | yes | yes | yes |
+
+Unsupported or intentionally unpublished cells are set to `null` in
+`versions.yaml`, so CI skips them.
+
+## Quick Checks
+
+```bash
+which gpt
+which snap
+gpt -h
+gpt Calibration -h
+```
+
+pyroSAR discovery:
 
 ```python
 from pyroSAR.examine import ExamineSnap
-ex = ExamineSnap()
-print(ex.snap, ex.gpt)      # both resolve into the conda env
+
+snap = ExamineSnap()
+print(snap.gpt)
 ```
 
-> InSAR phase unwrapping additionally needs the external `snaphu` binary:
-> `conda install -c conda-forge snaphu`.
+## Repository Layout
 
----
-
-## Building
-
-Packages are built by CI (`.github/workflows/build.yml`) across a *version × OS*
-matrix on native runners, then published to anaconda.org and attached to Releases.
-
-`versions.yaml` is the single source of truth (installer filenames, sha256, JDK pin).
-
-To build one package locally:
-
-```bash
-conda install -n base conda-build pyyaml ruamel.yaml
-python scripts/compute-hashes.py --only 13.0.0/osx-arm64   # fill the real sha256
-eval "$(python scripts/resolve.py 13.0.0 osx-arm64)"       # export build env vars
-python -m conda_build.cli.main_build recipe/
+```text
+recipe/                 conda-build recipe and activation hooks
+versions.yaml           SNAP versions, retained subdirs, installer names, JDK/build pins
+scripts/                resolver, hash checker, local build helper
+tests/                  runtime acceptance checks
+docs/                   GitHub Pages documentation
+.github/workflows/      package build/publish and Pages workflows
 ```
 
-Add a new SNAP version = one entry in `versions.yaml` + `compute-hashes.py` + add it
-to the CI matrix input. No recipe-logic changes.
+## License
 
-## Why not conda-forge?
+- SNAP and packaged SNAP components: GPL-3.0, copyright ESA and contributors.
+- Packaging scripts, workflows, and docs in this repository: Apache-2.0.
+- Built packages include SNAP's `LICENSE.txt`, `THIRDPARTY_LICENSES.txt`, and a
+  package `NOTICE.txt`.
 
-This install-and-prune design can't go on the official conda-forge channel: it
-repackages prebuilt binaries (conda-forge wants build-from-source), is ~1 GB,
-targets multiple versions, and conda-forge's `openjdk` has no Windows build. A
-from-source feedstock is a possible future v2. Until then: the `-c sarforge`
-channel.
-
-## Licensing & attribution
-
-- **SNAP** © ESA and contributors — **Brockmann Consult**, **SkyWatch**, **CS Group**,
-  and others — via the [STEP platform](https://step.esa.int). Licensed **GPL-3.0**.
-  Each package ships SNAP's `LICENSE.txt` and `THIRDPARTY_LICENSES.txt`, and a
-  `NOTICE.txt` with corresponding-source links to <https://github.com/senbox-org>.
-- We redistribute a **pruned subset** of the official distribution with **SNAP's
-  source unmodified** (GPLv3 §6 corresponding source is the upstream tag).
-- Prior art gratefully acknowledged: [`snap-contrib/snap-conda`](https://github.com/snap-contrib/snap-conda)
-  and [`snapista`](https://github.com/snap-contrib/snapista).
-- **This project's own tooling** (recipe, scripts, CI) is licensed **Apache-2.0**
-  (see [`LICENSE`](LICENSE) and [`NOTICE`](NOTICE)). The *packaged software* remains
-  GPL-3.0 © ESA et al.
-- **Not affiliated with or endorsed by ESA.** No ESA branding is used.
+See [NOTICE](NOTICE) and [docs/packaging-rationale.md](docs/packaging-rationale.md)
+for attribution and corresponding-source notes.

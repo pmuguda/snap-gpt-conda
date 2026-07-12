@@ -14,6 +14,7 @@ An end-to-end geocode() on a real Sentinel-1 GRD scene is the fuller check and i
 left to the operator (needs a scene download + orbit/DEM auxdata).
 """
 import os
+import shutil
 import sys
 
 
@@ -26,21 +27,24 @@ def main() -> int:
         return 1
 
     ex = ExamineSnap()
-    snap = getattr(ex, "snap_exe", None) or getattr(ex, "snap", None)
     gpt = getattr(ex, "gpt", None)
+    snap = shutil.which("snap")
     print(f"CONDA_PREFIX = {prefix}")
-    print(f"pyroSAR snap = {snap}")
     print(f"pyroSAR gpt  = {gpt}")
+    print(f"PATH snap    = {snap}")
 
     ok = True
     if not gpt or not os.path.exists(gpt):
         print("FAIL: pyroSAR did not resolve a gpt executable")
         ok = False
     if prefix and gpt and prefix not in os.path.realpath(gpt):
-        print("WARN: resolved gpt is outside CONDA_PREFIX (detection may be picking "
-              "up another SNAP install)")
+        print("FAIL: resolved gpt is outside CONDA_PREFIX")
+        ok = False
     if not snap:
-        print("FAIL: pyroSAR did not resolve the snap launcher (locator missing)")
+        print("FAIL: snap launcher is not on PATH")
+        ok = False
+    if prefix and snap and prefix not in os.path.realpath(snap):
+        print("FAIL: resolved snap is outside CONDA_PREFIX")
         ok = False
 
     print("PASS" if ok else "FAIL")

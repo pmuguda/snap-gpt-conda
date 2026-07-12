@@ -28,8 +28,8 @@ python scripts/compute-hashes.py --only "${VERSION}/${SUBDIR}"
 echo ">> resolving build env"
 eval "$(python scripts/resolve.py "${VERSION}" "${SUBDIR}")"
 
-echo ">> conda build (SNAP ${SNAP_VERSION}, ${SUBDIR})"
-python -m conda_build.cli.main_build recipe/ --output-folder "${ROOT}/out"
+echo ">> conda-build (SNAP ${SNAP_VERSION}, ${SUBDIR})"
+conda-build recipe/ --output-folder "${ROOT}/out"
 
 echo ">> done. Test with:"
 echo "   conda create -n esa-snap-s1tbx-gpt-test -c conda-forge --use-local esa-snap-s1tbx-gpt=${VERSION}"

@@ -52,7 +52,8 @@ cp "${SNAP_DEST}/THIRDPARTY_LICENSES.txt" "${SRC_DIR}/installer_licenses/" || tr
 
 # ---------------------------------------------------------------------------
 # 3. Prune to the SAR stack: drop optical toolboxes + the bundled JRE.
-#    Keep: snap (engine), s1tbx (SAR), rstb (polarimetry), platform, ide, bin, etc.
+#    Keep: snap (engine), microwavetbx (shared SAR), s1tbx (SAR), rstb
+#    (polarimetry), platform, ide, bin, etc.
 # ---------------------------------------------------------------------------
 rm -rf "${SNAP_DEST}/s2tbx" "${SNAP_DEST}/s3tbx" "${SNAP_DEST}/smostbx"
 # Remove any bundled JRE — we use this conda env's openjdk.
@@ -60,17 +61,34 @@ rm -rf "${SNAP_DEST}/jre" "${SNAP_DEST}/jbr" \
        "${SNAP_DEST}/.install4j/jre.bundle" 2>/dev/null || true
 
 # ---------------------------------------------------------------------------
-# 4. Register only the kept clusters
+# 4. Register the installer-provided clusters that still exist after pruning.
+#    SNAP cluster names/layout changed across 9-13, so keep the installer's
+#    dependency order instead of guessing a fixed SAR cluster list.
 # ---------------------------------------------------------------------------
-cat > "${SNAP_DEST}/etc/snap.clusters" <<'EOF'
-etc
-ide
-platform
-bin
-snap
-s1tbx
-rstb
-EOF
+CLUSTERS_FILE="${SNAP_DEST}/etc/snap.clusters"
+CLUSTERS_TMP="${CLUSTERS_FILE}.tmp"
+rm -f "${CLUSTERS_TMP}"
+: > "${CLUSTERS_TMP}"
+if [ -f "${CLUSTERS_FILE}" ]; then
+  while IFS= read -r cluster; do
+    [ -n "${cluster}" ] || continue
+    case "${cluster}" in
+      s2tbx|s3tbx|smostbx) continue ;;
+    esac
+    if [ -d "${SNAP_DEST}/${cluster}" ]; then
+      echo "${cluster}" >> "${CLUSTERS_TMP}"
+    fi
+  done < "${CLUSTERS_FILE}"
+else
+  for cluster in etc ide platform bin snap microwavetbx s1tbx rstb; do
+    if [ -d "${SNAP_DEST}/${cluster}" ]; then
+      echo "${cluster}" >> "${CLUSTERS_TMP}"
+    fi
+  done
+fi
+mv "${CLUSTERS_TMP}" "${CLUSTERS_FILE}"
+echo "Registered SNAP clusters:"
+cat "${CLUSTERS_FILE}"
 
 # ---------------------------------------------------------------------------
 # 5. Config tweaks: portable heap default (installer sets -Xmx to a huge value).
@@ -78,6 +96,16 @@ EOF
 if [ -f "${SNAP_DEST}/etc/snap.conf" ]; then
   sed -i.bak -E 's/-J-Xmx[0-9]+[GgMm]/-J-Xmx4G/' "${SNAP_DEST}/etc/snap.conf" || true
   rm -f "${SNAP_DEST}/etc/snap.conf.bak"
+  for opt in \
+    "-J-Dsnap.versionCheck.interval=NEVER" \
+    "-J-Djava.awt.headless=true"
+  do
+    if ! grep -Fq -- "${opt}" "${SNAP_DEST}/etc/snap.conf"; then
+      sed -i.bak -E "s|^(default_options=\".*)\"$|\\1 ${opt}\"|" \
+        "${SNAP_DEST}/etc/snap.conf" || true
+      rm -f "${SNAP_DEST}/etc/snap.conf.bak"
+    fi
+  done
 fi
 
 # ---------------------------------------------------------------------------

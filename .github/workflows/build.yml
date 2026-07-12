@@ -4,6 +4,7 @@ name: build
 # runners, then publish to the anaconda.org channel and attach to the Release.
 #
 # Required repo secret: ANACONDA_TOKEN (a token for the target anaconda.org channel).
+# Target anaconda.org owner/channel: sarforge.
 # Trigger a full publish by pushing a tag like `v13.0.0-1`, or run manually.
 
 on:
@@ -12,6 +13,9 @@ on:
       versions:
         description: "Space-separated SNAP versions to build (default: all)"
         default: "9.0.0 10.0.0 11.0.0 12.0.0 13.0.0"
+      subdirs:
+        description: "Space-separated conda subdirs to build"
+        default: "linux-64 win-64 osx-arm64"
       publish:
         description: "Upload to anaconda.org + Release"
         type: boolean
@@ -25,29 +29,46 @@ concurrency:
 
 jobs:
   matrix:
-    # Turn the version input into a JSON matrix axis.
+    # Turn the manual inputs into JSON matrix axes.
     runs-on: ubuntu-latest
     outputs:
       versions: ${{ steps.set.outputs.versions }}
+      targets: ${{ steps.set.outputs.targets }}
     steps:
       - id: set
         run: |
-          RAW="${{ github.event.inputs.versions }}"
-          [ -z "$RAW" ] && RAW="9.0.0 10.0.0 11.0.0 12.0.0 13.0.0"
-          JSON=$(printf '%s\n' $RAW | jq -R . | jq -s -c .)
-          echo "versions=$JSON" >> "$GITHUB_OUTPUT"
+          RAW_VERSIONS="${{ github.event.inputs.versions }}"
+          RAW_SUBDIRS="${{ github.event.inputs.subdirs }}"
+          [ -z "$RAW_VERSIONS" ] && RAW_VERSIONS="9.0.0 10.0.0 11.0.0 12.0.0 13.0.0"
+          [ -z "$RAW_SUBDIRS" ] && RAW_SUBDIRS="linux-64 win-64 osx-arm64"
+
+          VERSIONS_JSON=$(printf '%s\n' $RAW_VERSIONS | jq -R . | jq -s -c .)
+          TARGETS_JSON='[]'
+          for SUBDIR in $RAW_SUBDIRS; do
+            case "$SUBDIR" in
+              linux-64)  OS="ubuntu-latest" ;;
+              win-64)    OS="windows-latest" ;;
+              osx-64)    OS="macos-15-intel" ;;
+              osx-arm64) OS="macos-14" ;;
+              *) echo "unknown subdir: $SUBDIR" >&2; exit 1 ;;
+            esac
+            TARGETS_JSON=$(jq -c --arg os "$OS" --arg subdir "$SUBDIR" \
+              '. + [{os: $os, subdir: $subdir}]' <<< "$TARGETS_JSON")
+          done
+
+          echo "versions=$VERSIONS_JSON" >> "$GITHUB_OUTPUT"
+          echo "targets=$TARGETS_JSON" >> "$GITHUB_OUTPUT"
 
   build:
     needs: matrix
     strategy:
       fail-fast: false
+      # SNAP installers are large; keep the matrix intentionally narrow so
+      # GitHub-hosted runners and anaconda.org uploads are not overwhelmed.
+      max-parallel: 2
       matrix:
         snap: ${{ fromJSON(needs.matrix.outputs.versions) }}
-        target:
-          - { os: ubuntu-latest,  subdir: linux-64 }
-          - { os: windows-latest, subdir: win-64 }
-          - { os: macos-13,       subdir: osx-64 }     # Intel
-          - { os: macos-14,       subdir: osx-arm64 }  # Apple Silicon
+        target: ${{ fromJSON(needs.matrix.outputs.targets) }}
     runs-on: ${{ matrix.target.os }}
     defaults:
       run:
@@ -84,21 +105,27 @@ jobs:
       - name: conda build
         if: steps.resolve.outputs.skip != 'true'
         run: |
-          python -m conda_build.cli.main_build recipe/ \
+          conda-build recipe/ \
             --no-anaconda-upload \
             --output-folder "${{ runner.temp }}/out"
+
+      - name: List build output
+        if: steps.resolve.outputs.skip != 'true'
+        run: |
+          find "${{ runner.temp }}/out" -type f -print
 
       - name: Upload build artifact
         if: steps.resolve.outputs.skip != 'true'
         uses: actions/upload-artifact@v4
         with:
           name: esa-snap-s1tbx-gpt-${{ matrix.snap }}-${{ matrix.target.subdir }}
-          path: ${{ runner.temp }}/out/**/*.conda
+          path: |
+            ${{ runner.temp }}/out/**/*.conda
+            ${{ runner.temp }}/out/**/*.tar.bz2
           if-no-files-found: error
 
-      - name: pyroSAR auto-detect check (non-blocking, unix)
+      - name: pyroSAR auto-detect check (unix)
         if: steps.resolve.outputs.skip != 'true' && runner.os != 'Windows'
-        continue-on-error: true
         run: |
           conda create -y -n verify -c "file://${{ runner.temp }}/out" -c conda-forge esa-snap-s1tbx-gpt pyrosar
           conda run -n verify python tests/test_pyrosar.py
@@ -107,10 +134,12 @@ jobs:
         if: steps.resolve.outputs.skip != 'true' && (github.event.inputs.publish == 'true' || startsWith(github.ref, 'refs/tags/'))
         env:
           ANACONDA_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
+          ANACONDA_OWNER: ${{ secrets.ANACONDA_OWNER }}
         run: |
           test -n "$ANACONDA_TOKEN" || { echo "ANACONDA_TOKEN not set"; exit 1; }
-          find "${{ runner.temp }}/out" -name '*.conda' -exec \
-            anaconda -t "$ANACONDA_TOKEN" upload --force --no-progress {} +
+          test -n "$ANACONDA_OWNER" || { echo "ANACONDA_OWNER not set"; exit 1; }
+          find "${{ runner.temp }}/out" \( -name '*.conda' -o -name '*.tar.bz2' \) -exec \
+            anaconda -t "$ANACONDA_TOKEN" upload --user "$ANACONDA_OWNER" --force --no-progress {} +
 
   release:
     needs: build
@@ -121,5 +150,7 @@ jobs:
         with: { path: dist, merge-multiple: true }
       - uses: softprops/action-gh-release@v2
         with:
-          files: dist/**/*.conda
+          files: |
+            dist/**/*.conda
+            dist/**/*.tar.bz2
           generate_release_notes: true

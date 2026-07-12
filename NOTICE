@@ -22,11 +22,12 @@ GNU General Public License, version 3 (GPL-3.0). Bundled third-party components
 are listed with their individual licenses in THIRDPARTY_LICENSES.txt (shipped
 inside each package under opt/snap/).
 
-The packages contain a PRUNED SUBSET of the official ESA SNAP "sentinel"
-distribution (the optical Sentinel-2/3 toolboxes and the bundled JRE are removed);
-SNAP's source code is redistributed UNMODIFIED. Corresponding source (GPL-3.0 §6)
-is available at https://github.com/senbox-org using the release tag matching the
-packaged version. A written offer for the corresponding source is available via
+The packages contain a PRUNED SUBSET of the official ESA SNAP distribution (the
+optical Sentinel-2/3 toolboxes are removed). Linux/macOS builds use conda-forge
+OpenJDK; Windows builds keep SNAP's bundled runtime. SNAP's source code is
+redistributed UNMODIFIED. Corresponding source (GPL-3.0 §6) is available at
+https://github.com/senbox-org using the release tag matching the packaged
+version. A written offer for the corresponding source is available via
 https://github.com/pmuguda/snap-gpt-conda .
 
 This project is NOT affiliated with or endorsed by the European Space Agency.
