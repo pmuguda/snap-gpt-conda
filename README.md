@@ -1,5 +1,13 @@
 # esa-snap-s1tbx-gpt
 
+[![build](https://github.com/pmuguda/snap-gpt-conda/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/pmuguda/snap-gpt-conda/actions/workflows/build.yml)
+[![pages](https://github.com/pmuguda/snap-gpt-conda/actions/workflows/pages.yml/badge.svg?branch=main)](https://github.com/pmuguda/snap-gpt-conda/actions/workflows/pages.yml)
+[![docs](https://img.shields.io/badge/docs-GitHub%20Pages-blue)](https://pmuguda.github.io/snap-gpt-conda/)
+[![Anaconda version](https://anaconda.org/sarforge/esa-snap-s1tbx-gpt/badges/version.svg)](https://anaconda.org/sarforge/esa-snap-s1tbx-gpt)
+[![Anaconda platforms](https://anaconda.org/sarforge/esa-snap-s1tbx-gpt/badges/platforms.svg)](https://anaconda.org/sarforge/esa-snap-s1tbx-gpt)
+[![Anaconda downloads](https://anaconda.org/sarforge/esa-snap-s1tbx-gpt/badges/downloads.svg)](https://anaconda.org/sarforge/esa-snap-s1tbx-gpt)
+[![license](https://img.shields.io/github/license/pmuguda/snap-gpt-conda)](LICENSE)
+
 Headless ESA SNAP `gpt` packaged for conda SAR workflows.
 
 `esa-snap-s1tbx-gpt` repackages the official ESA SNAP installers so users can
