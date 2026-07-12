@@ -75,12 +75,13 @@ about:
     InSAR, polarimetry, classification. No GUI installer, no Docker, no snappy/jpy.
   description: >
     Unofficial community repackaging of the ESA Sentinel Application Platform
-    (SNAP) that exposes only the headless `gpt` command-line tool, using this
-    conda environment's own `openjdk`. The optical Sentinel-2/3 toolboxes are
-    pruned; the SAR stack is kept intact and the standard install layout is
-    preserved so tools like pyroSAR auto-detect it. SNAP is developed by ESA and
-    contributors and licensed under GPL-3.0. This package is NOT affiliated with
-    or endorsed by ESA. See NOTICE for attribution and corresponding-source links.
+    (SNAP) that exposes the headless `gpt` command-line tool. Linux/macOS builds
+    use conda-forge `openjdk`; Windows builds keep SNAP's bundled runtime. The
+    optical Sentinel-2/3 toolboxes are pruned; the SAR stack is kept intact and
+    the standard install layout is preserved so tools like pyroSAR auto-detect
+    it. SNAP is developed by ESA and contributors and licensed under GPL-3.0.
+    This package is NOT affiliated with or endorsed by ESA. See NOTICE for
+    attribution and corresponding-source links.
   dev_url: https://github.com/pmuguda/snap-gpt-conda
 
 extra:

@@ -13,7 +13,15 @@ tracks the packaged **SNAP** version; this changelog tracks the **recipe**.
   (pyroSAR-friendly) and pin the JVM to the env's `openjdk`.
 - GitHub Actions matrix (version × OS) publishing to anaconda.org + Releases.
 - pyroSAR `ExamineSnap()` acceptance test.
+- Manual workflow `subdirs` input for targeted platform rebuilds.
+- Documentation pages for packaging rationale and Jupyter usage.
+
+### Changed
+- Public `sarforge` retention matrix now keeps older SNAP versions on Linux,
+  SNAP 12 on Linux + Apple Silicon macOS, and SNAP 13 on Linux + Windows +
+  Apple Silicon macOS.
+- Linux/macOS builds add headless/no-update-check JVM defaults to `snap.conf` so
+  `gpt` behaves consistently in servers, CI, and notebooks.
 
 ### Notes
-- Not yet build-tested end to end; first validation target is SNAP 13 / osx-arm64.
 - `sha256` values in `versions.yaml` are filled by `scripts/compute-hashes.py`.

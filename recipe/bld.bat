@@ -61,7 +61,7 @@ mkdir "%PREFIX%\share\esa-snap-s1tbx-gpt" 2>nul
 (
   echo esa-snap-s1tbx-gpt %SNAP_VERSION% - unofficial community repackaging of ESA SNAP.
   echo Subset of the official ESA SNAP "sentinel" distribution; optical s2tbx/s3tbx
-  echo and the bundled JRE removed; SNAP source unmodified. GPL-3.0.
+  echo removed. Windows builds keep SNAP's bundled runtime; SNAP source unmodified. GPL-3.0.
   echo Corresponding source: https://github.com/senbox-org  ^(tag matching %SNAP_VERSION%^).
   echo NOT affiliated with or endorsed by ESA.
 ) > "%PREFIX%\share\esa-snap-s1tbx-gpt\NOTICE.txt"
