@@ -42,6 +42,9 @@ jobs:
     needs: matrix
     strategy:
       fail-fast: false
+      # SNAP installers are large; keep the matrix intentionally narrow so
+      # GitHub-hosted runners and anaconda.org uploads are not overwhelmed.
+      max-parallel: 2
       matrix:
         snap: ${{ fromJSON(needs.matrix.outputs.versions) }}
         target:
