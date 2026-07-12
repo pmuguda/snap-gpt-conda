@@ -94,3 +94,14 @@ docs/                   GitHub Pages documentation
 
 See [NOTICE](NOTICE) and [docs/packaging-rationale.md](docs/packaging-rationale.md)
 for attribution and corresponding-source notes.
+
+## Acknowledgements
+
+This project builds on the idea that SNAP should be installable through conda.
+Prior art includes [snap-contrib/snap-conda](https://github.com/snap-contrib/snap-conda),
+which packaged SNAP for unattended Linux/headless use, and the broader
+`snap-contrib` ecosystem around SNAP automation.
+
+`esa-snap-s1tbx-gpt` takes a narrower SAR/GPT-focused path: versioned SNAP 9-13
+runtime packages, no `snappy/jpy` bridge, a pruned SAR stack, and a
+pyroSAR-friendly layout.

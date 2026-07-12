@@ -80,6 +80,17 @@ toolbox binaries, and need version-specific installer handling.
 A future source-built feedstock may be possible, but this repository focuses on
 a practical, reproducible conda distribution of the official SNAP runtime.
 
+## Prior Art
+
+The project should be understood as part of a longer SNAP automation ecosystem,
+not as a first attempt at conda packaging. In particular,
+[snap-contrib/snap-conda](https://github.com/snap-contrib/snap-conda) showed that
+SNAP could be distributed through conda for unattended Linux/headless use.
+
+`esa-snap-s1tbx-gpt` differs by narrowing the scope to headless `gpt` and the SAR
+stack, preserving multiple SNAP versions for reproducibility, keeping a
+pyroSAR-friendly layout, and documenting a retained public platform matrix.
+
 ## Runtime Defaults
 
 SNAP is a desktop application platform even when only `gpt` is used. In headless
