@@ -51,6 +51,7 @@ versions:
   #      DMG; build/test it on both Intel and Apple Silicon runners.
   "12.0.0":
     dir: "12.0"
+    build_number: 1     # build 0 may need the same headless/update JVM flags as 11/13
     jdk: "21"
     installers:
       linux-64:   { file: esa-snap_all_linux-12.0.0.sh,        sha256: null }
