@@ -19,9 +19,13 @@ mamba create -n snap11 -c sarforge -c conda-forge esa-snap-s1tbx-gpt=11.0.0
 
 ## Pages
 
+- [Install and usage](install.md): install commands, version selection,
+  pyroSAR checks, and troubleshooting.
 - [Packaging rationale](packaging-rationale.md): why old SNAP versions matter,
   why the package is structured this way, and why the retained build matrix is
   intentional.
 - [Jupyter usage](jupyter.md): how to use `gpt` and pyroSAR from notebooks.
+- [Maintainer guide](maintainer-guide.md): build numbers, local builds,
+  publishing, and Pages setup.
 
 The repository README remains the canonical package landing page on GitHub.
