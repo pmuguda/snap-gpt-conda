@@ -80,10 +80,13 @@ Anaconda.org when `publish=true`.
 
 ## GitHub Pages
 
-The Pages workflow publishes the `docs/` directory. In repository settings, set:
+GitHub Pages is configured to publish the `docs/` directory from `main`. In
+repository settings, this corresponds to:
 
 ```text
-Settings -> Pages -> Source -> GitHub Actions
+Settings -> Pages -> Source -> Deploy from a branch
+Branch: main
+Folder: /docs
 ```
 
 Expected URL:

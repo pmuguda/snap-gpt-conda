@@ -1,7 +1,6 @@
 # esa-snap-s1tbx-gpt
 
 [![build](https://github.com/pmuguda/snap-gpt-conda/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/pmuguda/snap-gpt-conda/actions/workflows/build.yml)
-[![pages](https://github.com/pmuguda/snap-gpt-conda/actions/workflows/pages.yml/badge.svg?branch=main)](https://github.com/pmuguda/snap-gpt-conda/actions/workflows/pages.yml)
 [![docs](https://img.shields.io/badge/docs-GitHub%20Pages-blue)](https://pmuguda.github.io/snap-gpt-conda/)
 [![Anaconda version](https://anaconda.org/sarforge/esa-snap-s1tbx-gpt/badges/version.svg)](https://anaconda.org/sarforge/esa-snap-s1tbx-gpt)
 [![Anaconda platforms](https://anaconda.org/sarforge/esa-snap-s1tbx-gpt/badges/platforms.svg)](https://anaconda.org/sarforge/esa-snap-s1tbx-gpt)
@@ -83,7 +82,7 @@ versions.yaml           SNAP versions, retained subdirs, installer names, JDK/bu
 scripts/                resolver, hash checker, local build helper
 tests/                  runtime acceptance checks
 docs/                   GitHub Pages documentation
-.github/workflows/      package build/publish and Pages workflows
+.github/workflows/      package build/publish workflow
 ```
 
 ## License
