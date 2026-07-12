@@ -96,6 +96,16 @@ cat "${CLUSTERS_FILE}"
 if [ -f "${SNAP_DEST}/etc/snap.conf" ]; then
   sed -i.bak -E 's/-J-Xmx[0-9]+[GgMm]/-J-Xmx4G/' "${SNAP_DEST}/etc/snap.conf" || true
   rm -f "${SNAP_DEST}/etc/snap.conf.bak"
+  for opt in \
+    "-J-Dsnap.versionCheck.interval=NEVER" \
+    "-J-Djava.awt.headless=true"
+  do
+    if ! grep -Fq -- "${opt}" "${SNAP_DEST}/etc/snap.conf"; then
+      sed -i.bak -E "s|^(default_options=\".*)\"$|\\1 ${opt}\"|" \
+        "${SNAP_DEST}/etc/snap.conf" || true
+      rm -f "${SNAP_DEST}/etc/snap.conf.bak"
+    fi
+  done
 fi
 
 # ---------------------------------------------------------------------------

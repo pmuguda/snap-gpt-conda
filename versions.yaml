@@ -39,7 +39,7 @@ versions:
   # ---- 13.0.0 — filenames CONFIRMED from step.esa.int download page (Oct 2025)
   "13.0.0":
     dir: "13.0"
-    build_number: 1     # build 0 was published with Java 11; SNAP 13 needs Java 21
+    build_number: 2     # build 1 starts but can crash on Linux without headless/update JVM flags
     jdk: "21"
     installers:
       linux-64:   { file: esa-snap_sentinel_linux-13.0.0.sh,        sha256: null }
