@@ -21,6 +21,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import time
 import sys
 import urllib.error
 import urllib.request
@@ -37,6 +38,8 @@ import os
 HERE = os.path.dirname(os.path.abspath(__file__))
 VERSIONS_YAML = os.path.join(os.path.dirname(HERE), "versions.yaml")
 UA = {"User-Agent": "esa-snap-s1tbx-gpt/compute-hashes"}
+HEAD_TIMEOUT = 90
+HEAD_ATTEMPTS = 3
 
 
 def _load():
@@ -60,13 +63,17 @@ def _dump(y, data):
 
 def _exists(url: str) -> bool:
     req = urllib.request.Request(url, method="HEAD", headers=UA)
-    try:
-        with urllib.request.urlopen(req, timeout=30) as r:
-            return 200 <= r.status < 400
-    except urllib.error.HTTPError as e:
-        return e.code in (403,)  # some mirrors block HEAD but allow GET
-    except Exception:
-        return False
+    for attempt in range(HEAD_ATTEMPTS):
+        try:
+            with urllib.request.urlopen(req, timeout=HEAD_TIMEOUT) as r:
+                return 200 <= r.status < 400
+        except urllib.error.HTTPError as e:
+            return e.code in (403,)  # some mirrors block HEAD but allow GET
+        except Exception:
+            if attempt == HEAD_ATTEMPTS - 1:
+                return False
+            time.sleep(2 * (attempt + 1))
+    return False
 
 
 def _filename_variants(fname: str, version: str) -> list[str]:
@@ -75,17 +82,19 @@ def _filename_variants(fname: str, version: str) -> list[str]:
     v_dot = version                      # 13.0.0
     v_us = version.replace(".", "_")     # 13_0_0
     v_short_us = f"{major}_0"            # 9_0  (old 2-part token)
-    cand = {fname}
+    cand = [fname]
     for a, b in [("-" + v_dot, "_" + v_us), ("_" + v_us, "-" + v_dot),
                  ("_" + v_us, "_" + v_short_us), ("-" + v_dot, "_" + v_short_us)]:
-        if a in fname:
-            cand.add(fname.replace(a, b))
+        repaired = fname.replace(a, b)
+        if a in fname and repaired not in cand:
+            cand.append(repaired)
     # macos_intel <-> macos, unix <-> linux swaps
     for a, b in [("macos_intel", "macos"), ("macos", "macos_intel"),
                  ("unix", "linux"), ("linux", "unix")]:
-        if a in fname:
-            cand.add(fname.replace(a, b))
-    return list(cand)
+        repaired = fname.replace(a, b)
+        if a in fname and repaired not in cand:
+            cand.append(repaired)
+    return cand
 
 
 def _sha256(url: str) -> str:
