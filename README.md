@@ -72,7 +72,7 @@ matrix:
 | 9.0.0 | yes | no | no | Older reproducibility build |
 | 10.0.0 | yes | no | no | Older reproducibility build |
 | 11.0.0 | yes | no | no | Rebuild uses headless JVM defaults |
-| 12.0.0 | yes | no | yes | ESA provides one Mac DMG; ARM build must pass native CI |
+| 12.0.0 | yes | no | no | Linux-only retained build |
 | 13.0.0 | yes | yes | yes | Current full platform set |
 
 The recipe can represent other upstream installer cells, but unsupported or
@@ -218,7 +218,7 @@ Manual workflow inputs:
 
 ```text
 versions = 11.0.0 12.0.0 13.0.0
-subdirs  = linux-64 osx-arm64
+subdirs  = linux-64
 publish  = true
 ```
 

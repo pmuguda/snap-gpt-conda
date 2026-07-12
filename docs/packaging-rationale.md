@@ -58,7 +58,7 @@ Anaconda.org free storage is limited, while SNAP installers are large. The publi
 
 ```text
 SNAP 9-11: Linux only
-SNAP 12:   Linux + Apple Silicon macOS
+SNAP 12:   Linux only
 SNAP 13:   Linux + Windows + Apple Silicon macOS
 ```
 

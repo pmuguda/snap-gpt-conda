@@ -17,9 +17,8 @@ tracks the packaged **SNAP** version; this changelog tracks the **recipe**.
 - Documentation pages for packaging rationale and Jupyter usage.
 
 ### Changed
-- Public `sarforge` retention matrix now keeps older SNAP versions on Linux,
-  SNAP 12 on Linux + Apple Silicon macOS, and SNAP 13 on Linux + Windows +
-  Apple Silicon macOS.
+- Public `sarforge` retention matrix now keeps SNAP 9-12 on Linux and SNAP 13
+  on Linux + Windows + Apple Silicon macOS.
 - Linux/macOS builds add headless/no-update-check JVM defaults to `snap.conf` so
   `gpt` behaves consistently in servers, CI, and notebooks.
 
