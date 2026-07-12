@@ -1,11 +1,11 @@
 # esa-snap-s1tbx-gpt
 
-[![build](https://github.com/pmuguda/snap-gpt-conda/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/pmuguda/snap-gpt-conda/actions/workflows/build.yml)
 [![docs](https://img.shields.io/badge/docs-GitHub%20Pages-blue)](https://pmuguda.github.io/snap-gpt-conda/)
 [![Anaconda version](https://anaconda.org/sarforge/esa-snap-s1tbx-gpt/badges/version.svg)](https://anaconda.org/sarforge/esa-snap-s1tbx-gpt)
 [![Anaconda platforms](https://anaconda.org/sarforge/esa-snap-s1tbx-gpt/badges/platforms.svg)](https://anaconda.org/sarforge/esa-snap-s1tbx-gpt)
 [![Anaconda downloads](https://anaconda.org/sarforge/esa-snap-s1tbx-gpt/badges/downloads.svg)](https://anaconda.org/sarforge/esa-snap-s1tbx-gpt)
-[![license](https://img.shields.io/github/license/pmuguda/snap-gpt-conda)](LICENSE)
+[![packaging license](https://img.shields.io/badge/packaging-Apache--2.0-blue)](LICENSE)
+[![SNAP license](https://img.shields.io/badge/SNAP-GPL--3.0-orange)](NOTICE)
 
 Headless ESA SNAP `gpt` packaged for conda SAR workflows.
 
