@@ -92,7 +92,7 @@ docs/                   GitHub Pages documentation
 - Built packages include SNAP's `LICENSE.txt`, `THIRDPARTY_LICENSES.txt`, and a
   package `NOTICE.txt`.
 
-See [NOTICE](NOTICE) and [docs/packaging-rationale.md](docs/packaging-rationale.md)
+See [NOTICE](NOTICE) and the [packaging rationale](https://pmuguda.github.io/snap-gpt-conda/packaging-rationale.html)
 for attribution and corresponding-source notes.
 
 ## Acknowledgements

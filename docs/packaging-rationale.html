@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Packaging rationale - esa-snap-s1tbx-gpt</title>
+<meta name="description" content="Why esa-snap-s1tbx-gpt preserves old SNAP versions and packages a pruned SAR-focused GPT runtime.">
+<meta name="theme-color" content="#050505">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<script>
+  document.documentElement.dataset.theme =
+    localStorage.getItem('theme') || (matchMedia('(prefers-color-scheme: light)').matches ? 'paper' : 'dark');
+</script>
+
+<header class="site-head">
+  <a class="brand" href="index.html"><b>esa-snap-s1tbx-gpt</b><span class="v">RATIONALE</span></a>
+  <div class="head-actions">
+    <div class="seg" role="group" aria-label="Theme">
+      <button data-theme-set="dark" aria-pressed="true">DARK</button>
+      <button data-theme-set="paper" aria-pressed="false">PAPER</button>
+    </div>
+    <a class="icon-link" href="https://github.com/pmuguda/snap-gpt-conda" target="_blank" rel="noopener" aria-label="GitHub repository">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+    </a>
+  </div>
+</header>
+
+<main class="wrap">
+  <header class="article-hero grid-bg">
+    <div class="article-kicker">Packaging rationale</div>
+    <h1 class="display">A smaller SNAP,<br>for reproducible SAR.</h1>
+    <p class="article-lead prose"><code>esa-snap-s1tbx-gpt</code> exists to make ESA SNAP GPT usable as normal conda infrastructure while preserving scientific reproducibility.</p>
+  </header>
+
+  <div class="article-grid">
+    <article class="article prose">
+      <section id="old-versions">
+        <h2>Why keep old SNAP versions</h2>
+        <p>SNAP versions are part of a scientific workflow, not just a convenience layer. Older versions can matter because:</p>
+        <ul>
+          <li>published methods may have been validated with a specific SNAP release;</li>
+          <li>graph XML files can depend on operators and defaults from that release;</li>
+          <li>processor behavior, auxiliary-data handling, and toolbox internals can change;</li>
+          <li>teams often need to reproduce older Sentinel-1 products for comparisons or audits.</li>
+        </ul>
+<pre><code>esa-snap-s1tbx-gpt 11.0.0 -&gt; SNAP 11.0.0
+esa-snap-s1tbx-gpt 13.0.0 -&gt; SNAP 13.0.0</code></pre>
+        <p>Conda build numbers are reserved for packaging-only fixes.</p>
+      </section>
+
+      <section id="one-name">
+        <h2>Why one package name</h2>
+        <p>Using one package name and one channel gives users a trusted, homogeneous install pattern:</p>
+<pre><code>mamba create -n snap11 -c sarforge -c conda-forge esa-snap-s1tbx-gpt=11.0.0
+mamba create -n snap13 -c sarforge -c conda-forge esa-snap-s1tbx-gpt=13.0.0</code></pre>
+        <p>Splitting historical versions across unrelated channels would make old builds look unofficial or second-class. Keeping the same name, channel, metadata, tests, and layout is the trust signal.</p>
+      </section>
+
+      <section id="sar">
+        <h2>Why a pruned SAR/GPT package</h2>
+        <p>The package targets headless SAR processing, not the full desktop SNAP experience. The build keeps:</p>
+        <ul>
+          <li>SNAP engine and <code>gpt</code>;</li>
+          <li>Sentinel-1 Toolbox, <code>s1tbx</code>;</li>
+          <li>Radar/Polarimetric Toolbox, <code>rstb</code>;</li>
+          <li>shared microwave/SAR support;</li>
+          <li>the normal SNAP directory layout so tools can auto-detect it.</li>
+        </ul>
+        <p>The optical Sentinel-2/3 clusters are removed because they are large and outside this package's SAR/GPT purpose.</p>
+      </section>
+
+      <section id="matrix">
+        <h2>Why the matrix is smaller than upstream</h2>
+        <p>Anaconda.org free storage is limited, while SNAP installers are large. The public <code>sarforge</code> channel therefore keeps a deliberate matrix:</p>
+        <table class="matrix">
+          <thead><tr><th>SNAP</th><th>Retained platforms</th></tr></thead>
+          <tbody>
+            <tr><td class="v">9.0.0</td><td>linux-64</td></tr>
+            <tr><td class="v">10.0.0</td><td>linux-64</td></tr>
+            <tr><td class="v">11.0.0</td><td>linux-64</td></tr>
+            <tr><td class="v">12.0.0</td><td>linux-64</td></tr>
+            <tr><td class="v">13.0.0</td><td>linux-64, win-64, osx-arm64</td></tr>
+          </tbody>
+        </table>
+        <p>Linux is kept for old releases because it is the most common platform for reproducible, automated, server-side processing. SNAP 13 keeps the broadest platform set because it is the current release line.</p>
+      </section>
+
+      <section id="conda-forge">
+        <h2>Why not conda-forge yet</h2>
+        <p>This package currently repackages upstream installer binaries. That does not fit the normal conda-forge expectation that packages are built from source in the feedstock.</p>
+        <p>A future source-built feedstock may be possible, but this repository focuses on a practical, reproducible conda distribution of the official SNAP runtime.</p>
+      </section>
+
+      <section id="prior-art">
+        <h2>Prior art</h2>
+        <p>The project should be understood as part of a longer SNAP automation ecosystem, not as a first attempt at conda packaging. In particular, <a href="https://github.com/snap-contrib/snap-conda">snap-contrib/snap-conda</a> showed that SNAP could be distributed through conda for unattended Linux/headless use.</p>
+        <p><code>esa-snap-s1tbx-gpt</code> differs by narrowing the scope to headless <code>gpt</code> and the SAR stack, preserving multiple SNAP versions for reproducibility, keeping a pyroSAR-friendly layout, and documenting a retained public platform matrix.</p>
+      </section>
+
+      <section id="runtime">
+        <h2>Runtime defaults</h2>
+        <p>SNAP is a desktop application platform even when only <code>gpt</code> is used. In headless Linux environments, startup can trigger update/version-check or desktop initialization paths that are not useful for batch processing.</p>
+<pre><code>-J-Dsnap.versionCheck.interval=NEVER
+-J-Djava.awt.headless=true</code></pre>
+        <p>Those defaults are added to the packaged <code>snap.conf</code> so <code>gpt -h</code> and batch workflows behave consistently on servers, CI, and notebooks.</p>
+      </section>
+    </article>
+
+    <aside class="article-nav" aria-label="Page navigation">
+      <div class="label">On this page</div>
+      <a class="active" href="#old-versions">Old versions</a>
+      <a href="#one-name">One package name</a>
+      <a href="#sar">SAR/GPT scope</a>
+      <a href="#matrix">Matrix</a>
+      <a href="#conda-forge">Conda-forge</a>
+      <a href="#prior-art">Prior art</a>
+      <a href="#runtime">Runtime defaults</a>
+      <hr class="rule">
+      <a href="index.html">Overview</a>
+      <a href="install.html">Install and usage</a>
+      <a href="jupyter.html">Jupyter usage</a>
+      <a href="maintainer-guide.html">Maintainer guide</a>
+    </aside>
+  </div>
+</main>
+
+<footer class="site-foot">
+  <span>© 2026 Pavan Muguda Sanjeevamurthy</span>
+  <span class="foot-sep">·</span>
+  <a class="foot-link" href="https://github.com/pmuguda/snap-gpt-conda" target="_blank" rel="noopener">Repo</a>
+  <a class="foot-link kofi" href="https://ko-fi.com/pavan_muguda" target="_blank" rel="noopener">Support on Ko-fi</a>
+</footer>
+<script src="site.js"></script>
+</body>
+</html>

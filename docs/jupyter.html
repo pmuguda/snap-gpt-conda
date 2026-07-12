@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jupyter usage - esa-snap-s1tbx-gpt</title>
+<meta name="description" content="Use ESA SNAP gpt from Jupyter notebooks through subprocess or pyroSAR.">
+<meta name="theme-color" content="#050505">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<script>
+  document.documentElement.dataset.theme =
+    localStorage.getItem('theme') || (matchMedia('(prefers-color-scheme: light)').matches ? 'paper' : 'dark');
+</script>
+
+<header class="site-head">
+  <a class="brand" href="index.html"><b>esa-snap-s1tbx-gpt</b><span class="v">NOTEBOOKS</span></a>
+  <div class="head-actions">
+    <div class="seg" role="group" aria-label="Theme">
+      <button data-theme-set="dark" aria-pressed="true">DARK</button>
+      <button data-theme-set="paper" aria-pressed="false">PAPER</button>
+    </div>
+    <a class="icon-link" href="https://github.com/pmuguda/snap-gpt-conda" target="_blank" rel="noopener" aria-label="GitHub repository">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+    </a>
+  </div>
+</header>
+
+<main class="wrap">
+  <header class="article-hero grid-bg">
+    <div class="article-kicker">Jupyter usage</div>
+    <h1 class="display">Run SNAP workflows<br>from notebooks.</h1>
+    <p class="article-lead prose">The notebook kernel must run inside the conda environment where <code>esa-snap-s1tbx-gpt</code> is installed. From there, drive SNAP through <code>gpt</code> or through pyroSAR.</p>
+    <div class="doc-strip">
+      <span class="chip chip--signal">subprocess</span>
+      <span class="chip">pyroSAR</span>
+      <span class="chip">graph XML</span>
+    </div>
+  </header>
+
+  <div class="article-grid">
+    <article class="article prose">
+      <section id="environment">
+        <h2>Create a notebook environment</h2>
+<pre><code>mamba create -n snap-notebook -c sarforge -c conda-forge \
+  esa-snap-s1tbx-gpt=13.0.0 python ipykernel pyrosar
+conda activate snap-notebook
+python -m ipykernel install --user --name snap-notebook --display-name "Python (SNAP GPT)"</code></pre>
+        <p>Then select <strong>Python (SNAP GPT)</strong> as the notebook kernel.</p>
+      </section>
+
+      <section id="check">
+        <h2>Check GPT from a notebook</h2>
+<pre><code>import shutil
+import subprocess
+
+print(shutil.which("gpt"))
+subprocess.run(["gpt", "-h"], check=True)</code></pre>
+      </section>
+
+      <section id="graph">
+        <h2>Run a GPT graph</h2>
+<pre><code>from pathlib import Path
+import subprocess
+
+graph = Path("calibration.xml")
+source = Path("S1_scene.zip")
+target = Path("calibrated.dim")
+
+subprocess.run(
+    [
+        "gpt",
+        str(graph),
+        f"-Pinput={source}",
+        f"-Poutput={target}",
+    ],
+    check=True,
+)</code></pre>
+        <p>Exact graph parameters depend on the XML graph you are running.</p>
+      </section>
+
+      <section id="pyrosar">
+        <h2>pyroSAR</h2>
+        <p>pyroSAR can call SNAP through <code>gpt</code> after it detects the installation:</p>
+<pre><code>from pyroSAR.examine import ExamineSnap
+
+snap = ExamineSnap()
+print(snap.gpt)</code></pre>
+        <p>For full pyroSAR geocoding workflows, install any additional external tools you need, such as <code>snaphu</code> for phase unwrapping:</p>
+<pre><code>mamba install -c conda-forge snaphu</code></pre>
+      </section>
+
+      <section id="boundary">
+        <h2>What this does not provide</h2>
+        <p>This package does not provide SNAP's old <code>snappy</code>/<code>jpy</code> Python-Java bridge. In notebooks, use one of these patterns instead:</p>
+        <ul>
+          <li>call <code>gpt</code> with <code>subprocess</code>;</li>
+          <li>use pyroSAR, which drives SNAP through <code>gpt</code>;</li>
+          <li>generate graph XML programmatically and execute it with <code>gpt</code>.</li>
+        </ul>
+        <div class="note">That separation is intentional: this package is a reliable headless GPT runtime, not a Python binding for SNAP's internal Java API.</div>
+      </section>
+    </article>
+
+    <aside class="article-nav" aria-label="Page navigation">
+      <div class="label">On this page</div>
+      <a class="active" href="#environment">Environment</a>
+      <a href="#check">Check GPT</a>
+      <a href="#graph">Run graph</a>
+      <a href="#pyrosar">pyroSAR</a>
+      <a href="#boundary">Boundary</a>
+      <hr class="rule">
+      <a href="index.html">Overview</a>
+      <a href="install.html">Install and usage</a>
+      <a href="packaging-rationale.html">Packaging rationale</a>
+      <a href="maintainer-guide.html">Maintainer guide</a>
+    </aside>
+  </div>
+</main>
+
+<footer class="site-foot">
+  <span>© 2026 Pavan Muguda Sanjeevamurthy</span>
+  <span class="foot-sep">·</span>
+  <a class="foot-link" href="https://github.com/pmuguda/snap-gpt-conda" target="_blank" rel="noopener">Repo</a>
+  <a class="foot-link kofi" href="https://ko-fi.com/pavan_muguda" target="_blank" rel="noopener">Support on Ko-fi</a>
+</footer>
+<script src="site.js"></script>
+</body>
+</html>

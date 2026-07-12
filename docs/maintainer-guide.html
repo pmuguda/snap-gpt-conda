@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Maintainer guide - esa-snap-s1tbx-gpt</title>
+<meta name="description" content="Maintainer notes for building, testing, publishing, and documenting esa-snap-s1tbx-gpt.">
+<meta name="theme-color" content="#050505">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<script>
+  document.documentElement.dataset.theme =
+    localStorage.getItem('theme') || (matchMedia('(prefers-color-scheme: light)').matches ? 'paper' : 'dark');
+</script>
+
+<header class="site-head">
+  <a class="brand" href="index.html"><b>esa-snap-s1tbx-gpt</b><span class="v">MAINTAIN</span></a>
+  <div class="head-actions">
+    <div class="seg" role="group" aria-label="Theme">
+      <button data-theme-set="dark" aria-pressed="true">DARK</button>
+      <button data-theme-set="paper" aria-pressed="false">PAPER</button>
+    </div>
+    <a class="icon-link" href="https://github.com/pmuguda/snap-gpt-conda" target="_blank" rel="noopener" aria-label="GitHub repository">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+    </a>
+  </div>
+</header>
+
+<main class="wrap">
+  <header class="article-hero grid-bg">
+    <div class="article-kicker">Maintainer guide</div>
+    <h1 class="display">Build, test,<br>publish, document.</h1>
+    <p class="article-lead prose">Packaging details that should not crowd the README, collected for future release work.</p>
+  </header>
+
+  <div class="article-grid">
+    <article class="article prose">
+      <section id="files">
+        <h2>Key files</h2>
+        <ul class="compact-list">
+          <li><code>versions.yaml</code> - supported SNAP versions and retained platform cells</li>
+          <li><code>recipe/meta.yaml</code> - conda-build metadata</li>
+          <li><code>recipe/build.sh</code> - Linux/macOS installer execution and pruning</li>
+          <li><code>recipe/bld.bat</code> - Windows installer execution and pruning</li>
+          <li><code>recipe/activate.*</code> - expose SNAP_HOME, gpt, snap, and Java settings</li>
+          <li><code>scripts/resolve.py</code> - turns <code>versions.yaml</code> into build variables</li>
+          <li><code>scripts/compute-hashes.py</code> - verifies installer URLs and fills sha256 values</li>
+          <li><code>.github/workflows/build.yml</code> - package build and publish workflow</li>
+        </ul>
+      </section>
+
+      <section id="matrix">
+        <h2>Retained matrix</h2>
+        <p>The public channel intentionally retains:</p>
+        <table class="matrix">
+          <thead><tr><th>SNAP</th><th>linux-64</th><th>win-64</th><th>osx-arm64</th></tr></thead>
+          <tbody>
+            <tr><td class="v">9.0.0</td><td class="yes">yes</td><td class="no">no</td><td class="no">no</td></tr>
+            <tr><td class="v">10.0.0</td><td class="yes">yes</td><td class="no">no</td><td class="no">no</td></tr>
+            <tr><td class="v">11.0.0</td><td class="yes">yes</td><td class="no">no</td><td class="no">no</td></tr>
+            <tr><td class="v">12.0.0</td><td class="yes">yes</td><td class="no">no</td><td class="no">no</td></tr>
+            <tr><td class="v">13.0.0</td><td class="yes">yes</td><td class="yes">yes</td><td class="yes">yes</td></tr>
+          </tbody>
+        </table>
+        <p>Other cells are represented as <code>null</code> in <code>versions.yaml</code>; the workflow resolves them as intentional skips.</p>
+      </section>
+
+      <section id="build-numbers">
+        <h2>Build numbers</h2>
+        <p>The package version is the SNAP version. Use the conda build number for packaging-only fixes:</p>
+<pre><code>13.0.0-1  Java 21 packaging fix
+13.0.0-2  Linux/headless startup defaults
+11.0.0-1  Linux/headless startup defaults
+12.0.0-1  Linux/headless startup defaults</code></pre>
+      </section>
+
+      <section id="local-build">
+        <h2>Local build</h2>
+<pre><code>mamba install -n base -c conda-forge conda-build pyyaml ruamel.yaml
+python scripts/compute-hashes.py --only 13.0.0/linux-64
+eval "$(python scripts/resolve.py 13.0.0 linux-64)"
+conda-build recipe/ --output-folder out</code></pre>
+        <p>Or use the helper:</p>
+<pre><code>scripts/build-local.sh 13.0.0 linux-64</code></pre>
+      </section>
+
+      <section id="publishing">
+        <h2>Publishing</h2>
+        <p>Manual workflow inputs:</p>
+<pre><code>versions = 11.0.0 12.0.0 13.0.0
+subdirs  = linux-64
+publish  = true</code></pre>
+        <p>Required repository secrets:</p>
+<pre><code>ANACONDA_TOKEN
+ANACONDA_OWNER</code></pre>
+        <p>The workflow resolves <code>versions.yaml</code>, skips <code>null</code> cells, builds on native runners, runs smoke tests, runs pyroSAR discovery on Unix, and uploads to Anaconda.org when <code>publish=true</code>.</p>
+      </section>
+
+      <section id="pages">
+        <h2>GitHub Pages</h2>
+        <p>GitHub Pages is configured to publish the <code>docs/</code> directory from <code>main</code>.</p>
+<pre><code>Settings -&gt; Pages -&gt; Source -&gt; Deploy from a branch
+Branch: main
+Folder: /docs</code></pre>
+        <p>Expected URL:</p>
+<pre><code>https://pmuguda.github.io/snap-gpt-conda/</code></pre>
+      </section>
+    </article>
+
+    <aside class="article-nav" aria-label="Page navigation">
+      <div class="label">On this page</div>
+      <a class="active" href="#files">Key files</a>
+      <a href="#matrix">Matrix</a>
+      <a href="#build-numbers">Build numbers</a>
+      <a href="#local-build">Local build</a>
+      <a href="#publishing">Publishing</a>
+      <a href="#pages">Pages</a>
+      <hr class="rule">
+      <a href="index.html">Overview</a>
+      <a href="install.html">Install and usage</a>
+      <a href="packaging-rationale.html">Packaging rationale</a>
+      <a href="jupyter.html">Jupyter usage</a>
+    </aside>
+  </div>
+</main>
+
+<footer class="site-foot">
+  <span>© 2026 Pavan Muguda Sanjeevamurthy</span>
+  <span class="foot-sep">·</span>
+  <a class="foot-link" href="https://github.com/pmuguda/snap-gpt-conda" target="_blank" rel="noopener">Repo</a>
+  <a class="foot-link kofi" href="https://ko-fi.com/pavan_muguda" target="_blank" rel="noopener">Support on Ko-fi</a>
+</footer>
+<script src="site.js"></script>
+</body>
+</html>

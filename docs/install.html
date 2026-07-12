@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Install and usage - esa-snap-s1tbx-gpt</title>
+<meta name="description" content="Install ESA SNAP gpt and the Sentinel-1/SAR stack from the sarforge conda channel.">
+<meta name="theme-color" content="#050505">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<script>
+  document.documentElement.dataset.theme =
+    localStorage.getItem('theme') || (matchMedia('(prefers-color-scheme: light)').matches ? 'paper' : 'dark');
+</script>
+
+<header class="site-head">
+  <a class="brand" href="index.html"><b>esa-snap-s1tbx-gpt</b><span class="v">DOCS</span></a>
+  <div class="head-actions">
+    <div class="seg" role="group" aria-label="Theme">
+      <button data-theme-set="dark" aria-pressed="true">DARK</button>
+      <button data-theme-set="paper" aria-pressed="false">PAPER</button>
+    </div>
+    <a class="icon-link" href="https://github.com/pmuguda/snap-gpt-conda" target="_blank" rel="noopener" aria-label="GitHub repository">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+    </a>
+  </div>
+</header>
+
+<main class="wrap">
+  <header class="article-hero grid-bg">
+    <div class="article-kicker">Install and usage</div>
+    <h1 class="display">Choose a SNAP version.<br>Install with conda.</h1>
+    <p class="article-lead prose">Use the <code>sarforge</code> channel first, then <code>conda-forge</code> for dependencies. The package version is the upstream SNAP version.</p>
+    <div class="telemetry" aria-label="install facts">
+      <span class="seg-c"><span class="k">CHANNEL</span><span class="num">sarforge</span></span>
+      <span class="seg-c"><span class="k">SOLVER</span><span class="num">mamba</span></span>
+      <span class="seg-c live"><span class="blip"></span>GPT</span>
+    </div>
+  </header>
+
+  <div class="article-grid">
+    <article class="article prose">
+      <section id="quickstart">
+        <h2>Quickstart</h2>
+        <p>For current SNAP 13 workflows:</p>
+<pre><code>mamba create -n snap13 -c sarforge -c conda-forge esa-snap-s1tbx-gpt=13.0.0
+conda activate snap13
+gpt -h</code></pre>
+        <p><code>conda</code> works too, but <code>mamba</code> usually resolves these large environments faster.</p>
+      </section>
+
+      <section id="versions">
+        <h2>Select a SNAP version</h2>
+        <p>Use a separate environment per SNAP version. That keeps Java, launchers, and SNAP module state predictable.</p>
+<pre><code>mamba create -n snap9  -c sarforge -c conda-forge esa-snap-s1tbx-gpt=9.0.0
+mamba create -n snap10 -c sarforge -c conda-forge esa-snap-s1tbx-gpt=10.0.0
+mamba create -n snap11 -c sarforge -c conda-forge esa-snap-s1tbx-gpt=11.0.0
+mamba create -n snap12 -c sarforge -c conda-forge esa-snap-s1tbx-gpt=12.0.0
+mamba create -n snap13 -c sarforge -c conda-forge esa-snap-s1tbx-gpt=13.0.0</code></pre>
+        <table class="matrix">
+          <thead><tr><th>SNAP</th><th>linux-64</th><th>win-64</th><th>osx-arm64</th></tr></thead>
+          <tbody>
+            <tr><td class="v">9.0.0</td><td class="yes">published</td><td class="no">-</td><td class="no">-</td></tr>
+            <tr><td class="v">10.0.0</td><td class="yes">published</td><td class="no">-</td><td class="no">-</td></tr>
+            <tr><td class="v">11.0.0</td><td class="yes">published</td><td class="no">-</td><td class="no">-</td></tr>
+            <tr><td class="v">12.0.0</td><td class="yes">published</td><td class="no">-</td><td class="no">-</td></tr>
+            <tr><td class="v">13.0.0</td><td class="yes">published</td><td class="yes">published</td><td class="yes">published</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="check">
+        <h2>Check the install</h2>
+<pre><code>conda activate snap13
+which gpt
+which snap
+echo "$CONDA_PREFIX"
+gpt -h
+gpt Calibration -h</code></pre>
+        <p>Expected launcher paths:</p>
+<pre><code>$CONDA_PREFIX/opt/snap/bin/gpt
+$CONDA_PREFIX/opt/snap/bin/snap</code></pre>
+      </section>
+
+      <section id="pyrosar">
+        <h2>pyroSAR</h2>
+        <p>pyroSAR detects SNAP by finding the <code>snap</code> launcher on <code>PATH</code>. This package preserves the standard SNAP layout, so no manual pyroSAR config should be needed.</p>
+<pre><code>mamba install -c conda-forge pyrosar</code></pre>
+<pre><code>from pyroSAR.examine import ExamineSnap
+
+snap = ExamineSnap()
+print(snap.gpt)</code></pre>
+        <p>For InSAR phase unwrapping, install <code>snaphu</code> separately:</p>
+<pre><code>mamba install -c conda-forge snaphu</code></pre>
+      </section>
+
+      <section id="troubleshooting">
+        <h2>Troubleshooting</h2>
+        <p>If <code>gpt</code> starts but crashes during SNAP initialization, check that you are using the fixed build for the version:</p>
+<pre><code>conda list | grep esa-snap-s1tbx-gpt</code></pre>
+        <p>Packaging-only fixes are delivered as higher conda build numbers. For example, <code>13.0.0-2</code> includes Linux/headless startup defaults.</p>
+        <p>If the solver keeps an old local cache, create a new environment or ask for the exact build:</p>
+<pre><code>mamba create -n snap13-fixed -c sarforge -c conda-forge "esa-snap-s1tbx-gpt=13.0.0=*"</code></pre>
+      </section>
+    </article>
+
+    <aside class="article-nav" aria-label="Page navigation">
+      <div class="label">On this page</div>
+      <a class="active" href="#quickstart">Quickstart</a>
+      <a href="#versions">Versions</a>
+      <a href="#check">Check install</a>
+      <a href="#pyrosar">pyroSAR</a>
+      <a href="#troubleshooting">Troubleshooting</a>
+      <hr class="rule">
+      <a href="index.html">Overview</a>
+      <a href="packaging-rationale.html">Packaging rationale</a>
+      <a href="jupyter.html">Jupyter usage</a>
+      <a href="maintainer-guide.html">Maintainer guide</a>
+    </aside>
+  </div>
+</main>
+
+<footer class="site-foot">
+  <span>© 2026 Pavan Muguda Sanjeevamurthy</span>
+  <span class="foot-sep">·</span>
+  <a class="foot-link" href="https://github.com/pmuguda/snap-gpt-conda" target="_blank" rel="noopener">Repo</a>
+  <a class="foot-link kofi" href="https://ko-fi.com/pavan_muguda" target="_blank" rel="noopener">Support on Ko-fi</a>
+</footer>
+<script src="site.js"></script>
+</body>
+</html>

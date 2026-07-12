@@ -199,20 +199,6 @@ print(snap.gpt)   <span class="cmt"># resolves inside the conda env</span></code
   </a>
 </footer>
 
-<script>
-  // DARK / PAPER toggle
-  const root = document.documentElement;
-  const btns = document.querySelectorAll('[data-theme-set]');
-  function sync() {
-    const cur = root.dataset.theme;
-    btns.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.themeSet === cur)));
-  }
-  btns.forEach(b => b.addEventListener('click', () => {
-    root.dataset.theme = b.dataset.themeSet;
-    localStorage.setItem('theme', b.dataset.themeSet);
-    sync();
-  }));
-  sync();
-</script>
+<script src="site.js"></script>
 </body>
 </html>
