@@ -61,6 +61,7 @@ versions:
   # ---- 11.0.0 — official Sentinel installers; no native ARM mac build.
   "11.0.0":
     dir: "11.0"
+    build_number: 1     # build 0 can crash on Linux without headless/update JVM flags
     jdk: "11"
     installers:
       linux-64:   { file: esa-snap_sentinel_linux-11.0.0.sh,    sha256: null }
