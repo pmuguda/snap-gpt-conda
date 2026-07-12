@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>esa-snap-s1tbx-gpt — headless ESA SNAP gpt for conda</title>
+<meta name="description" content="Headless ESA SNAP Graph Processing Tool (gpt) with the Sentinel-1/SAR stack, packaged for conda. No GUI installer, no Docker, no snappy/jpy. pyroSAR-friendly.">
+<meta name="author" content="Pavan Muguda Sanjeevamurthy">
+<meta name="theme-color" content="#050505">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta property="og:title" content="esa-snap-s1tbx-gpt">
+<meta property="og:description" content="Headless ESA SNAP gpt + SAR stack, installable with conda.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23050505'/%3E%3Cg fill='none' stroke='%23d0973d' stroke-width='1.6'%3E%3Cpath d='M16 16 A6 6 0 0 1 22 10'/%3E%3Cpath d='M16 16 A10 10 0 0 1 26 6' opacity='.6'/%3E%3Cpath d='M16 16 A14 14 0 0 1 30 2' opacity='.35'/%3E%3C/g%3E%3Ccircle cx='16' cy='16' r='2' fill='%23d0973d'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="styles.css">
+<style>
+  /* Page layout — tokens only, no new colours */
+  .site-head { position: sticky; top: 0; z-index: 20; display: flex; align-items: center;
+    justify-content: space-between; gap: var(--sp-4); padding: var(--sp-3) var(--sp-5);
+    background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border); }
+  .brand { display: flex; align-items: baseline; gap: .5rem; }
+  .brand b { font-family: var(--font-cond); font-weight: 700; letter-spacing: .01em; color: var(--text); }
+  .brand .v { font: var(--fs-label) var(--font-mono); color: var(--accent); letter-spacing: .12em; }
+  .head-actions { display: flex; align-items: center; gap: var(--sp-3); }
+
+  section { padding: var(--sp-8) 0 var(--sp-6); }
+  .hero { padding-top: var(--sp-7); }
+  .hero .display span { color: var(--accent); }
+  .hero .lead { margin: var(--sp-4) 0 var(--sp-5); font-size: 1.05rem; color: var(--text-2); }
+  .hero-cta { display: flex; flex-wrap: wrap; gap: var(--sp-3); margin-top: var(--sp-5); align-items: center; }
+  .grid-bg { background-image:
+      linear-gradient(rgba(255,255,255,.045) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.045) 1px, transparent 1px);
+    background-size: 60px 60px; }
+
+  pre { background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--r);
+    padding: var(--sp-4); overflow-x: auto; margin: var(--sp-3) 0; }
+  pre code { font: var(--fs-sm)/1.75 var(--font-mono); color: var(--text); }
+  code.inl { font-family: var(--font-mono); color: var(--accent); font-size: .92em; }
+  .cmt { color: var(--text-3); }
+
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: var(--sp-4); margin-top: var(--sp-4); }
+  .card p { color: var(--text-2); font-size: var(--fs-sm); margin-top: .4rem; }
+
+  table.matrix { width: 100%; border-collapse: collapse; margin-top: var(--sp-4);
+    font: var(--fs-sm) var(--font-mono); }
+  table.matrix th, table.matrix td { border: 1px solid var(--border); padding: .5rem .8rem; text-align: center; }
+  table.matrix th { color: var(--text-3); font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
+    font-size: var(--fs-label); background: var(--bg-2); }
+  table.matrix td.v { color: var(--text); text-align: left; }
+  .yes { color: var(--signal); } .no { color: var(--text-3); }
+
+  .doclinks { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: var(--sp-3); margin-top: var(--sp-4); }
+  .doclink { display: block; padding: var(--sp-4); border: 1px solid var(--border); background: var(--bg-3);
+    border-radius: var(--r); transition: var(--t); }
+  .doclink:hover { border-color: var(--border-h); box-shadow: var(--glow); }
+  .doclink b { color: var(--text); display: block; }
+  .doclink span { color: var(--text-3); font-size: var(--fs-sm); }
+  .note { border-left: 2px solid var(--accent-line); background: var(--accent-soft);
+    padding: var(--sp-3) var(--sp-4); margin-top: var(--sp-4); color: var(--text-2); font-size: var(--fs-sm); border-radius: 0 var(--r) var(--r) 0; }
+</style>
+</head>
+<body>
+<script>
+  // seed theme before paint
+  document.documentElement.dataset.theme =
+    localStorage.getItem('theme') || (matchMedia('(prefers-color-scheme: light)').matches ? 'paper' : 'dark');
+</script>
+
+<header class="site-head">
+  <div class="brand"><b>esa-snap-s1tbx-gpt</b><span class="v">SNAP 9–13</span></div>
+  <div class="head-actions">
+    <div class="seg" role="group" aria-label="Theme">
+      <button data-theme-set="dark"  aria-pressed="true">DARK</button>
+      <button data-theme-set="paper" aria-pressed="false">PAPER</button>
+    </div>
+    <a class="icon-link" href="https://github.com/pmuguda/snap-gpt-conda" target="_blank" rel="noopener" aria-label="GitHub repository">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+    </a>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- HERO -->
+  <section class="hero grid-bg">
+    <div class="sec-label">ESA SNAP · Graph Processing Tool</div>
+    <h1 class="display">Headless SNAP <span>gpt</span>,<br>installed by conda.</h1>
+    <p class="lead prose">A repackaging of the official ESA SNAP installers that puts the
+      Graph Processing Tool and the Sentinel-1 / SAR stack into a conda package —
+      for reproducible command-line, server, CI, notebook, and pyroSAR workflows.
+      <b>No GUI installer, no Docker, no <code class="inl">snappy</code>/<code class="inl">jpy</code>.</b></p>
+
+    <div class="telemetry" aria-label="package facts">
+      <span class="seg-c"><span class="k">SNAP</span><span class="num">9 – 13</span></span>
+      <span class="seg-c"><span class="k">OS</span><span class="num">linux · win · osx-arm</span></span>
+      <span class="seg-c"><span class="k">CHANNEL</span><span class="num">sarforge</span></span>
+      <span class="seg-c live"><span class="blip"></span>CONDA</span>
+    </div>
+
+    <div class="hero-cta">
+      <a class="btn" href="#install">Install</a>
+      <a class="btn btn--outline" href="install.html">Full docs →</a>
+      <span class="code-deco">SAR · InSAR · Polarimetry · Earth Observation</span>
+    </div>
+  </section>
+
+  <!-- 01 INSTALL -->
+  <section id="install">
+    <div class="sec-label">Install</div>
+    <h2 class="sec-title">One <span>conda</span> command</h2>
+    <p class="prose muted">The package version equals the SNAP version — pick the release you need.</p>
+<pre><code>mamba create -n snap13 -c sarforge -c conda-forge esa-snap-s1tbx-gpt=13.0.0
+conda activate snap13
+gpt -h</code></pre>
+    <p class="prose muted"><code class="inl">conda</code> works too; <code class="inl">mamba</code> just solves large environments faster.</p>
+    <div class="note">Second installs are near-instant — conda caches the package, so a new
+      environment hardlinks it rather than re-downloading ~1&nbsp;GB of SNAP.</div>
+  </section>
+
+  <!-- 02 WHAT'S INSIDE -->
+  <section>
+    <div class="sec-label">What's inside</div>
+    <h2 class="sec-title">The full <span>SAR</span> stack, nothing optical</h2>
+    <div class="cards">
+      <div class="card card--rule"><div class="card__title">SAR engine + s1tbx + rstb</div>
+        <p>All SAR sensors (Sentinel-1, TerraSAR-X, ALOS, RADARSAT, ICEYE, …), calibration,
+           SAR processing, InSAR, polarimetry, classification.</p></div>
+      <div class="card card--rule"><div class="card__title">Optical pruned</div>
+        <p>Sentinel-2/3 (<code class="inl">s2tbx</code>/<code class="inl">s3tbx</code>) and
+           <code class="inl">smostbx</code> removed to keep the package lean.</p></div>
+      <div class="card card--rule"><div class="card__title">Conda's own JDK</div>
+        <p>Linux/macOS use conda-forge <code class="inl">openjdk</code>; Windows keeps SNAP's
+           bundled runtime. No separate Java install, no <code class="inl">jpy</code> bridge.</p></div>
+      <div class="card card--rule"><div class="card__title">pyroSAR-ready</div>
+        <p>The standard SNAP layout is preserved and the real <code class="inl">snap</code>/<code class="inl">gpt</code>
+           launchers sit on <code class="inl">PATH</code>, so <code class="inl">ExamineSnap()</code> auto-detects it.</p></div>
+    </div>
+  </section>
+
+  <!-- 03 BUILD MATRIX -->
+  <section>
+    <div class="sec-label">Published builds</div>
+    <h2 class="sec-title">Trusted <span>matrix</span> on sarforge</h2>
+    <p class="prose muted">A storage-conscious set of platforms per SNAP version.</p>
+    <table class="matrix">
+      <thead><tr><th>SNAP</th><th>linux-64</th><th>win-64</th><th>osx-arm64</th></tr></thead>
+      <tbody>
+        <tr><td class="v">9.0.0</td><td class="yes">●</td><td class="no">—</td><td class="no">—</td></tr>
+        <tr><td class="v">10.0.0</td><td class="yes">●</td><td class="no">—</td><td class="no">—</td></tr>
+        <tr><td class="v">11.0.0</td><td class="yes">●</td><td class="no">—</td><td class="no">—</td></tr>
+        <tr><td class="v">12.0.0</td><td class="yes">●</td><td class="no">—</td><td class="no">—</td></tr>
+        <tr><td class="v">13.0.0</td><td class="yes">●</td><td class="yes">●</td><td class="yes">●</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- 04 PYROSAR -->
+  <section>
+    <div class="sec-label">pyroSAR</div>
+    <h2 class="sec-title">Zero-config <span>discovery</span></h2>
+    <p class="prose muted">pyroSAR finds SNAP by locating the <code class="inl">snap</code> launcher on <code class="inl">PATH</code> — which this package puts there.</p>
+<pre><code>from pyroSAR.examine import ExamineSnap
+
+snap = ExamineSnap()
+print(snap.gpt)   <span class="cmt"># resolves inside the conda env</span></code></pre>
+    <p class="prose muted">For InSAR phase unwrapping, add <code class="inl">snaphu</code>: <code class="inl">mamba install -c conda-forge snaphu</code>.</p>
+  </section>
+
+  <!-- 05 DOCS -->
+  <section>
+    <div class="sec-label">Documentation</div>
+    <h2 class="sec-title">Read <span>more</span></h2>
+    <div class="doclinks">
+      <a class="doclink" href="install.html"><b>Install &amp; usage</b><span>Commands, version selection, pyroSAR checks, troubleshooting.</span></a>
+      <a class="doclink" href="packaging-rationale.html"><b>Packaging rationale</b><span>Why old SNAP versions matter and why the build matrix is intentional.</span></a>
+      <a class="doclink" href="jupyter.html"><b>Jupyter usage</b><span>Driving gpt and pyroSAR from notebooks.</span></a>
+      <a class="doclink" href="maintainer-guide.html"><b>Maintainer guide</b><span>Build numbers, local builds, publishing, Pages setup.</span></a>
+    </div>
+    <div class="note prose"><b>Unofficial packaging.</b> Not affiliated with or endorsed by ESA.
+      SNAP is developed by ESA and contributors and licensed under GPL-3.0; the packaging code
+      here is Apache-2.0. See the repository <a href="https://github.com/pmuguda/snap-gpt-conda/blob/main/NOTICE">NOTICE</a>.</div>
+  </section>
+
+</main>
+
+<footer class="site-foot">
+  <span>© 2026 Pavan Muguda Sanjeevamurthy</span>
+  <span class="foot-sep">·</span>
+  <a class="foot-link" href="https://github.com/pmuguda/snap-gpt-conda" target="_blank" rel="noopener">
+    <svg class="gi" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+    Repo
+  </a>
+  <a class="foot-link kofi" href="https://ko-fi.com/pavan_muguda" target="_blank" rel="noopener">
+    <svg class="gi" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M23.88 8.94c-.36-1.86-2.1-2.86-3.84-2.86h-.78V5.2c0-.66-.54-1.2-1.2-1.2H2.04C1.2 4 .6 4.66.6 5.46v8.7c0 2.94 2.4 5.34 5.34 5.34h6.18c2.7 0 4.92-1.98 5.28-4.56h.66c2.82 0 4.86-2.7 3.82-5.4zm-4.5 3.06h-.42V8.7h.54c.96 0 1.74.78 1.74 1.74-.06.9-.84 1.62-1.86 1.56zM7.74 14.7c-.18.06-.36-.06-.42-.18-1.14-1.5-3.18-3.06-3.18-5.16 0-1.86 2.1-2.64 3.42-1.08 1.32-1.56 3.42-.72 3.42 1.08 0 2.1-2.04 3.66-3.24 5.34z"/></svg>
+    Support on Ko-fi
+  </a>
+</footer>
+
+<script>
+  // DARK / PAPER toggle
+  const root = document.documentElement;
+  const btns = document.querySelectorAll('[data-theme-set]');
+  function sync() {
+    const cur = root.dataset.theme;
+    btns.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.themeSet === cur)));
+  }
+  btns.forEach(b => b.addEventListener('click', () => {
+    root.dataset.theme = b.dataset.themeSet;
+    localStorage.setItem('theme', b.dataset.themeSet);
+    sync();
+  }));
+  sync();
+</script>
+</body>
+</html>
