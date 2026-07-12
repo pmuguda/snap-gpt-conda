@@ -45,7 +45,7 @@ versions:
   # ---- 12.0.0 — UNVERIFIED filenames (10+ scheme); compute-hashes.py confirms/repairs
   "12.0.0":
     dir: "12.0"
-    jdk: "11"
+    jdk: "21"
     installers:
       linux-64:   { file: esa-snap_sentinel_linux-12.0.0.sh,        sha256: null }
       win-64:     { file: esa-snap_sentinel_windows-12.0.0.exe,     sha256: null }
@@ -76,7 +76,7 @@ versions:
   #      compute-hashes.py must confirm the exact token (`9_0_0` vs `9_0`).
   "9.0.0":
     dir: "9.0"
-    jdk: "11"
+    jdk: "8"
     installers:
       linux-64:   { file: esa-snap_sentinel_unix_9_0_0.sh,     sha256: null }
       win-64:     { file: esa-snap_sentinel_windows_9_0_0.exe, sha256: null }
