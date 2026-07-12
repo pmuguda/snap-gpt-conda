@@ -1,8 +1,8 @@
 # versions.yaml — single source of truth for esa-snap-s1tbx-gpt conda packaging.
 #
-# One entry per supported stable SNAP release. For each release we record the
-# official ESA install4j installer filename per conda subdir, its sha256, and
-# the JDK the release runs on.
+# One entry per supported stable SNAP release. For each retained release/subdir
+# we record the official ESA install4j installer filename, its sha256, and the
+# JDK the release runs on.
 #
 # IMPORTANT:
 #   * sha256 values MUST be filled by `python scripts/compute-hashes.py`
@@ -18,6 +18,11 @@
 # previous-version page exposes "all" installers instead. In both cases we prune
 # optical toolboxes at build time, keeping the full SAR stack (snap engine +
 # s1tbx + rstb).
+#
+# Retention policy for the public sarforge channel:
+#   * SNAP 9-11: Linux only, for reproducible older workflows.
+#   * SNAP 12: Linux + Apple Silicon macOS.
+#   * SNAP 13: Linux + Windows + Apple Silicon macOS.
 
 base_url: https://download.esa.int/step/snap
 edition: sentinel
@@ -39,18 +44,19 @@ versions:
     installers:
       linux-64:   { file: esa-snap_sentinel_linux-13.0.0.sh,        sha256: null }
       win-64:     { file: esa-snap_sentinel_windows-13.0.0.exe,     sha256: null }
-      osx-64:     { file: esa-snap_sentinel_macos_intel-13.0.0.dmg, sha256: null }
+      osx-64:     null
       osx-arm64:  { file: esa-snap_sentinel_macos_arm-13.0.0.dmg,   sha256: null }
 
-  # ---- 12.0.0 — official "All Toolboxes" installers; no native ARM mac build.
+  # ---- 12.0.0 — official "All Toolboxes" installers. STEP provides one Mac
+  #      DMG; build/test it on both Intel and Apple Silicon runners.
   "12.0.0":
     dir: "12.0"
     jdk: "21"
     installers:
       linux-64:   { file: esa-snap_all_linux-12.0.0.sh,        sha256: null }
-      win-64:     { file: esa-snap_all_windows-12.0.0.exe,     sha256: null }
-      osx-64:     { file: esa-snap_all_macos-12.0.0.dmg,       sha256: null }
-      osx-arm64:  null
+      win-64:     null
+      osx-64:     null
+      osx-arm64:  { file: esa-snap_all_macos-12.0.0.dmg,       sha256: null }
 
   # ---- 11.0.0 — official Sentinel installers; no native ARM mac build.
   "11.0.0":
@@ -58,8 +64,8 @@ versions:
     jdk: "11"
     installers:
       linux-64:   { file: esa-snap_sentinel_linux-11.0.0.sh,    sha256: null }
-      win-64:     { file: esa-snap_sentinel_windows-11.0.0.exe, sha256: null }
-      osx-64:     { file: esa-snap_sentinel_macos-11.0.0.dmg,   sha256: null }
+      win-64:     null
+      osx-64:     null
       osx-arm64:  null
 
   # ---- 10.0.0 — official Sentinel installers; no native ARM mac build.
@@ -68,8 +74,8 @@ versions:
     jdk: "11"
     installers:
       linux-64:   { file: esa-snap_sentinel_linux-10.0.0.sh,    sha256: null }
-      win-64:     { file: esa-snap_sentinel_windows-10.0.0.exe, sha256: null }
-      osx-64:     { file: esa-snap_sentinel_macos-10.0.0.dmg,   sha256: null }
+      win-64:     null
+      osx-64:     null
       osx-arm64:  null
 
   # ---- 9.0.0 — old naming scheme; no native ARM mac build.
@@ -78,6 +84,6 @@ versions:
     jdk: "8"
     installers:
       linux-64:   { file: esa-snap_sentinel_unix_9_0_0.sh,          sha256: null }
-      win-64:     { file: esa-snap_sentinel_windows-x64_9_0_0.exe,  sha256: null }
-      osx-64:     { file: esa-snap_sentinel_macos_9_0_0.dmg,        sha256: null }
+      win-64:     null
+      osx-64:     null
       osx-arm64:  null   # no native Apple-Silicon build for SNAP 9

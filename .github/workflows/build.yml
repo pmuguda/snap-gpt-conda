@@ -13,6 +13,9 @@ on:
       versions:
         description: "Space-separated SNAP versions to build (default: all)"
         default: "9.0.0 10.0.0 11.0.0 12.0.0 13.0.0"
+      subdirs:
+        description: "Space-separated conda subdirs to build"
+        default: "linux-64 win-64 osx-arm64"
       publish:
         description: "Upload to anaconda.org + Release"
         type: boolean
@@ -26,17 +29,35 @@ concurrency:
 
 jobs:
   matrix:
-    # Turn the version input into a JSON matrix axis.
+    # Turn the manual inputs into JSON matrix axes.
     runs-on: ubuntu-latest
     outputs:
       versions: ${{ steps.set.outputs.versions }}
+      targets: ${{ steps.set.outputs.targets }}
     steps:
       - id: set
         run: |
-          RAW="${{ github.event.inputs.versions }}"
-          [ -z "$RAW" ] && RAW="9.0.0 10.0.0 11.0.0 12.0.0 13.0.0"
-          JSON=$(printf '%s\n' $RAW | jq -R . | jq -s -c .)
-          echo "versions=$JSON" >> "$GITHUB_OUTPUT"
+          RAW_VERSIONS="${{ github.event.inputs.versions }}"
+          RAW_SUBDIRS="${{ github.event.inputs.subdirs }}"
+          [ -z "$RAW_VERSIONS" ] && RAW_VERSIONS="9.0.0 10.0.0 11.0.0 12.0.0 13.0.0"
+          [ -z "$RAW_SUBDIRS" ] && RAW_SUBDIRS="linux-64 win-64 osx-arm64"
+
+          VERSIONS_JSON=$(printf '%s\n' $RAW_VERSIONS | jq -R . | jq -s -c .)
+          TARGETS_JSON='[]'
+          for SUBDIR in $RAW_SUBDIRS; do
+            case "$SUBDIR" in
+              linux-64)  OS="ubuntu-latest" ;;
+              win-64)    OS="windows-latest" ;;
+              osx-64)    OS="macos-15-intel" ;;
+              osx-arm64) OS="macos-14" ;;
+              *) echo "unknown subdir: $SUBDIR" >&2; exit 1 ;;
+            esac
+            TARGETS_JSON=$(jq -c --arg os "$OS" --arg subdir "$SUBDIR" \
+              '. + [{os: $os, subdir: $subdir}]' <<< "$TARGETS_JSON")
+          done
+
+          echo "versions=$VERSIONS_JSON" >> "$GITHUB_OUTPUT"
+          echo "targets=$TARGETS_JSON" >> "$GITHUB_OUTPUT"
 
   build:
     needs: matrix
@@ -47,11 +68,7 @@ jobs:
       max-parallel: 2
       matrix:
         snap: ${{ fromJSON(needs.matrix.outputs.versions) }}
-        target:
-          - { os: ubuntu-latest,  subdir: linux-64 }
-          - { os: windows-latest, subdir: win-64 }
-          - { os: macos-15-intel, subdir: osx-64 }     # Intel
-          - { os: macos-14,       subdir: osx-arm64 }  # Apple Silicon
+        target: ${{ fromJSON(needs.matrix.outputs.targets) }}
     runs-on: ${{ matrix.target.os }}
     defaults:
       run:
