@@ -6,6 +6,7 @@
 [![Anaconda downloads](https://anaconda.org/sarforge/esa-snap-s1tbx-gpt/badges/downloads.svg)](https://anaconda.org/sarforge/esa-snap-s1tbx-gpt)
 [![packaging license](https://img.shields.io/badge/packaging-Apache--2.0-blue)](LICENSE)
 [![SNAP license](https://img.shields.io/badge/SNAP-GPL--3.0-orange)](NOTICE)
+[![Ko-fi](https://img.shields.io/badge/support-Ko--fi-ff5e5b)](https://ko-fi.com/pavan_muguda)
 
 Headless ESA SNAP `gpt` packaged for conda SAR workflows.
 
@@ -29,6 +30,11 @@ gpt -h
 ## Documentation
 
 Read the documentation at [pmuguda.github.io/snap-gpt-conda](https://pmuguda.github.io/snap-gpt-conda/).
+
+## Support
+
+If this package saves you time, you can support the work on
+[Ko-fi](https://ko-fi.com/pavan_muguda).
 
 ## What Is Included
 
