@@ -23,6 +23,10 @@ gpt -h
 
 `conda` works too; `mamba` is just faster at solving large environments.
 
+SNAP 14 is the newest release and is currently published for **Linux**; on Linux,
+use `esa-snap-s1tbx-gpt=14.0.0`. SNAP 13 is the latest release available for
+Windows and Apple Silicon macOS. See the build matrix below.
+
 > Unofficial packaging. This project is not affiliated with or endorsed by ESA.
 > SNAP is developed by ESA and contributors and is licensed under GPL-3.0. The
 > packaging code in this repository is Apache-2.0.

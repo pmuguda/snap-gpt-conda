@@ -43,11 +43,13 @@
     <article class="article prose">
       <section id="quickstart">
         <h2>Quickstart</h2>
-        <p>For current SNAP 13 workflows:</p>
+        <p>SNAP 13 is the latest release on all platforms (Linux, Windows, macOS):</p>
 <pre><code>mamba create -n snap13 -c sarforge -c conda-forge esa-snap-s1tbx-gpt=13.0.0
 conda activate snap13
 gpt -h</code></pre>
         <p><code>conda</code> works too, but <code>mamba</code> usually resolves these large environments faster.</p>
+        <p>SNAP 14 is the newest release and is currently published for <b>Linux only</b>. On Linux, swap in <code>14.0.0</code>:</p>
+<pre><code>mamba create -n snap14 -c sarforge -c conda-forge esa-snap-s1tbx-gpt=14.0.0</code></pre>
       </section>
 
       <section id="versions">
@@ -57,7 +59,8 @@ gpt -h</code></pre>
 mamba create -n snap10 -c sarforge -c conda-forge esa-snap-s1tbx-gpt=10.0.0
 mamba create -n snap11 -c sarforge -c conda-forge esa-snap-s1tbx-gpt=11.0.0
 mamba create -n snap12 -c sarforge -c conda-forge esa-snap-s1tbx-gpt=12.0.0
-mamba create -n snap13 -c sarforge -c conda-forge esa-snap-s1tbx-gpt=13.0.0</code></pre>
+mamba create -n snap13 -c sarforge -c conda-forge esa-snap-s1tbx-gpt=13.0.0
+mamba create -n snap14 -c sarforge -c conda-forge esa-snap-s1tbx-gpt=14.0.0  # linux-64 only</code></pre>
         <table class="matrix">
           <thead><tr><th>SNAP</th><th>linux-64</th><th>win-64</th><th>osx-arm64</th></tr></thead>
           <tbody>
@@ -66,6 +69,7 @@ mamba create -n snap13 -c sarforge -c conda-forge esa-snap-s1tbx-gpt=13.0.0</cod
             <tr><td class="v">11.0.0</td><td class="yes">published</td><td class="no">-</td><td class="no">-</td></tr>
             <tr><td class="v">12.0.0</td><td class="yes">published</td><td class="no">-</td><td class="no">-</td></tr>
             <tr><td class="v">13.0.0</td><td class="yes">published</td><td class="yes">published</td><td class="yes">published</td></tr>
+            <tr><td class="v">14.0.0</td><td class="yes">published</td><td class="no">-</td><td class="no">-</td></tr>
           </tbody>
         </table>
       </section>
