@@ -58,6 +58,7 @@ The `sarforge` channel keeps a storage-conscious trusted matrix:
 | 11.0.0 | yes | no | no |
 | 12.0.0 | yes | no | no |
 | 13.0.0 | yes | yes | yes |
+| 14.0.0 | yes | no | no |
 
 Unsupported or intentionally unpublished cells are set to `null` in
 `versions.yaml`, so CI skips them.
@@ -108,6 +109,6 @@ Prior art includes [snap-contrib/snap-conda](https://github.com/snap-contrib/sna
 which packaged SNAP for unattended Linux/headless use, and the broader
 `snap-contrib` ecosystem around SNAP automation.
 
-`esa-snap-s1tbx-gpt` takes a narrower SAR/GPT-focused path: versioned SNAP 9-13
+`esa-snap-s1tbx-gpt` takes a narrower SAR/GPT-focused path: versioned SNAP 9-14
 runtime packages, no `snappy/jpy` bridge, a pruned SAR stack, and a
 pyroSAR-friendly layout.

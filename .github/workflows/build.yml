@@ -12,7 +12,7 @@ on:
     inputs:
       versions:
         description: "Space-separated SNAP versions to build (default: all)"
-        default: "9.0.0 10.0.0 11.0.0 12.0.0 13.0.0"
+        default: "9.0.0 10.0.0 11.0.0 12.0.0 13.0.0 14.0.0"
       subdirs:
         description: "Space-separated conda subdirs to build"
         default: "linux-64 win-64 osx-arm64"
@@ -39,7 +39,7 @@ jobs:
         run: |
           RAW_VERSIONS="${{ github.event.inputs.versions }}"
           RAW_SUBDIRS="${{ github.event.inputs.subdirs }}"
-          [ -z "$RAW_VERSIONS" ] && RAW_VERSIONS="9.0.0 10.0.0 11.0.0 12.0.0 13.0.0"
+          [ -z "$RAW_VERSIONS" ] && RAW_VERSIONS="9.0.0 10.0.0 11.0.0 12.0.0 13.0.0 14.0.0"
           [ -z "$RAW_SUBDIRS" ] && RAW_SUBDIRS="linux-64 win-64 osx-arm64"
 
           VERSIONS_JSON=$(printf '%s\n' $RAW_VERSIONS | jq -R . | jq -s -c .)

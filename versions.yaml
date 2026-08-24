@@ -23,6 +23,7 @@
 #   * SNAP 9-11: Linux only, for reproducible older workflows.
 #   * SNAP 12: Linux only.
 #   * SNAP 13: Linux + Windows + Apple Silicon macOS.
+#   * SNAP 14: Linux only (current release; other subdirs may be added later).
 
 base_url: https://download.esa.int/step/snap
 edition: sentinel
@@ -35,6 +36,20 @@ subdirs:
   osx-arm64: { os_token: macos_arm,   ext: dmg, arch: arm64  }
 
 versions:
+
+  # ---- 14.0.0 — Linux Sentinel installer CONFIRMED at download.esa.int/step/snap/14.0
+  #      (esa-snap_sentinel_linux-14.0.0.sh, ~1.13 GB, HTTP 206). JDK from ESA's
+  #      snap.install4j (javaMinVersion="21"). Linux-only for now; add win-64 /
+  #      osx-arm64 cells here if/when those builds are published.
+  "14.0.0":
+    dir: "14.0"
+    build_number: 0
+    jdk: "21"
+    installers:
+      linux-64:   { file: esa-snap_sentinel_linux-14.0.0.sh,        sha256: null }
+      win-64:     null
+      osx-64:     null
+      osx-arm64:  null
 
   # ---- 13.0.0 — filenames CONFIRMED from step.esa.int download page (Oct 2025)
   "13.0.0":
