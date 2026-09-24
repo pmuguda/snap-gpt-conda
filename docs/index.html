@@ -112,13 +112,13 @@
     <div class="sec-label">Install</div>
     <h2 class="sec-title">One <span>conda</span> command</h2>
     <p class="prose muted">The package version equals the SNAP version — pick the release you need.</p>
-<pre><code>mamba create -n snap13 -c sarforge -c conda-forge esa-snap-s1tbx-gpt=13.0.0
-conda activate snap13
+<pre><code>mamba create -n snap14 -c sarforge -c conda-forge esa-snap-s1tbx-gpt=14.0.0
+conda activate snap14
 gpt -h</code></pre>
     <p class="prose muted"><code class="inl">conda</code> works too; <code class="inl">mamba</code> just solves large environments faster.</p>
-    <div class="note">SNAP 14 is the newest release, currently published for Linux — on Linux, use
-      <code class="inl">esa-snap-s1tbx-gpt=14.0.0</code>. SNAP 13 is the latest release for
-      Windows and Apple Silicon macOS.</div>
+    <div class="note">SNAP 14 is the newest release, published for Linux, Windows, and Apple Silicon macOS.
+      Change the version pin to install any published release, for example
+      <code class="inl">esa-snap-s1tbx-gpt=13.0.0</code>.</div>
     <div class="note">Second installs are near-instant — conda caches the package, so a new
       environment hardlinks it rather than re-downloading ~1&nbsp;GB of SNAP.</div>
   </section>
@@ -153,10 +153,8 @@ gpt -h</code></pre>
       <tbody>
         <tr><td class="v">9.0.0</td><td class="yes">●</td><td class="no">—</td><td class="no">—</td></tr>
         <tr><td class="v">10.0.0</td><td class="yes">●</td><td class="no">—</td><td class="no">—</td></tr>
-        <tr><td class="v">11.0.0</td><td class="yes">●</td><td class="no">—</td><td class="no">—</td></tr>
-        <tr><td class="v">12.0.0</td><td class="yes">●</td><td class="no">—</td><td class="no">—</td></tr>
         <tr><td class="v">13.0.0</td><td class="yes">●</td><td class="yes">●</td><td class="yes">●</td></tr>
-        <tr><td class="v">14.0.0</td><td class="yes">●</td><td class="no">—</td><td class="no">—</td></tr>
+        <tr><td class="v">14.0.0</td><td class="yes">●</td><td class="yes">●</td><td class="yes">●</td></tr>
       </tbody>
     </table>
   </section>

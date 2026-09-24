@@ -16,16 +16,16 @@ conda. It is meant for reproducible command-line, server, CI, pyroSAR, and
 Jupyter workflows without running the SNAP GUI installer.
 
 ```bash
-mamba create -n snap13 -c sarforge -c conda-forge esa-snap-s1tbx-gpt=13.0.0
-conda activate snap13
+mamba create -n snap14 -c sarforge -c conda-forge esa-snap-s1tbx-gpt=14.0.0
+conda activate snap14
 gpt -h
 ```
 
 `conda` works too; `mamba` is just faster at solving large environments.
 
-SNAP 14 is the newest release and is currently published for **Linux**; on Linux,
-use `esa-snap-s1tbx-gpt=14.0.0`. SNAP 13 is the latest release available for
-Windows and Apple Silicon macOS. See the build matrix below.
+SNAP 14 is the newest release and is published for Linux, Windows, and Apple
+Silicon macOS. Pick any published version by changing the pin, for example
+`esa-snap-s1tbx-gpt=13.0.0`. See the build matrix below.
 
 > Unofficial packaging. This project is not affiliated with or endorsed by ESA.
 > SNAP is developed by ESA and contributors and is licensed under GPL-3.0. The
@@ -59,13 +59,12 @@ The `sarforge` channel keeps a storage-conscious trusted matrix:
 |---|---:|---:|---:|
 | 9.0.0 | yes | no | no |
 | 10.0.0 | yes | no | no |
-| 11.0.0 | yes | no | no |
-| 12.0.0 | yes | no | no |
 | 13.0.0 | yes | yes | yes |
-| 14.0.0 | yes | no | no |
+| 14.0.0 | yes | yes | yes |
 
 Unsupported or intentionally unpublished cells are set to `null` in
-`versions.yaml`, so CI skips them.
+`versions.yaml`, so CI skips them. SNAP 11 and 12 were retired from the channel
+on 2026-09-24; their recipes remain in `versions.yaml` and can be re-enabled.
 
 ## Quick Checks
 
@@ -113,6 +112,6 @@ Prior art includes [snap-contrib/snap-conda](https://github.com/snap-contrib/sna
 which packaged SNAP for unattended Linux/headless use, and the broader
 `snap-contrib` ecosystem around SNAP automation.
 
-`esa-snap-s1tbx-gpt` takes a narrower SAR/GPT-focused path: versioned SNAP 9-14
+`esa-snap-s1tbx-gpt` takes a narrower SAR/GPT-focused path: versioned SNAP
 runtime packages, no `snappy/jpy` bridge, a pruned SAR stack, and a
 pyroSAR-friendly layout.

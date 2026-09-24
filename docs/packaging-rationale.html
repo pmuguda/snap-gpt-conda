@@ -45,16 +45,16 @@
           <li>processor behavior, auxiliary-data handling, and toolbox internals can change;</li>
           <li>teams often need to reproduce older Sentinel-1 products for comparisons or audits.</li>
         </ul>
-<pre><code>esa-snap-s1tbx-gpt 11.0.0 -&gt; SNAP 11.0.0
-esa-snap-s1tbx-gpt 13.0.0 -&gt; SNAP 13.0.0</code></pre>
+<pre><code>esa-snap-s1tbx-gpt 13.0.0 -&gt; SNAP 13.0.0
+esa-snap-s1tbx-gpt 14.0.0 -&gt; SNAP 14.0.0</code></pre>
         <p>Conda build numbers are reserved for packaging-only fixes.</p>
       </section>
 
       <section id="one-name">
         <h2>Why one package name</h2>
         <p>Using one package name and one channel gives users a trusted, homogeneous install pattern:</p>
-<pre><code>mamba create -n snap11 -c sarforge -c conda-forge esa-snap-s1tbx-gpt=11.0.0
-mamba create -n snap13 -c sarforge -c conda-forge esa-snap-s1tbx-gpt=13.0.0</code></pre>
+<pre><code>mamba create -n snap10 -c sarforge -c conda-forge esa-snap-s1tbx-gpt=10.0.0
+mamba create -n snap14 -c sarforge -c conda-forge esa-snap-s1tbx-gpt=14.0.0</code></pre>
         <p>Splitting historical versions across unrelated channels would make old builds look unofficial or second-class. Keeping the same name, channel, metadata, tests, and layout is the trust signal.</p>
       </section>
 
@@ -79,13 +79,11 @@ mamba create -n snap13 -c sarforge -c conda-forge esa-snap-s1tbx-gpt=13.0.0</cod
           <tbody>
             <tr><td class="v">9.0.0</td><td>linux-64</td></tr>
             <tr><td class="v">10.0.0</td><td>linux-64</td></tr>
-            <tr><td class="v">11.0.0</td><td>linux-64</td></tr>
-            <tr><td class="v">12.0.0</td><td>linux-64</td></tr>
             <tr><td class="v">13.0.0</td><td>linux-64, win-64, osx-arm64</td></tr>
-            <tr><td class="v">14.0.0</td><td>linux-64</td></tr>
+            <tr><td class="v">14.0.0</td><td>linux-64, win-64, osx-arm64</td></tr>
           </tbody>
         </table>
-        <p>Linux is kept for every release because it is the most common platform for reproducible, automated, server-side processing. SNAP 14 is the newest release and currently ships Linux only; SNAP 13 keeps the broadest platform set (Linux, Windows, and Apple Silicon macOS). Other platforms can be added for SNAP 14 later.</p>
+        <p>Linux is kept for every release because it is the most common platform for reproducible, automated, server-side processing. The two current release lines, SNAP 13 and SNAP 14, ship the broadest platform set (Linux, Windows, and Apple Silicon macOS). SNAP 11 and 12 were retired from the channel on 2026-09-24; their recipes remain in the repository.</p>
       </section>
 
       <section id="conda-forge">

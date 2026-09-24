@@ -58,13 +58,11 @@
           <tbody>
             <tr><td class="v">9.0.0</td><td class="yes">yes</td><td class="no">no</td><td class="no">no</td></tr>
             <tr><td class="v">10.0.0</td><td class="yes">yes</td><td class="no">no</td><td class="no">no</td></tr>
-            <tr><td class="v">11.0.0</td><td class="yes">yes</td><td class="no">no</td><td class="no">no</td></tr>
-            <tr><td class="v">12.0.0</td><td class="yes">yes</td><td class="no">no</td><td class="no">no</td></tr>
             <tr><td class="v">13.0.0</td><td class="yes">yes</td><td class="yes">yes</td><td class="yes">yes</td></tr>
-            <tr><td class="v">14.0.0</td><td class="yes">yes</td><td class="no">no</td><td class="no">no</td></tr>
+            <tr><td class="v">14.0.0</td><td class="yes">yes</td><td class="yes">yes</td><td class="yes">yes</td></tr>
           </tbody>
         </table>
-        <p>Other cells are represented as <code>null</code> in <code>versions.yaml</code>; the workflow resolves them as intentional skips.</p>
+        <p>Other cells are represented as <code>null</code> in <code>versions.yaml</code>; the workflow resolves them as intentional skips. SNAP 11 and 12 were retired from the channel on 2026-09-24; their recipes remain in <code>versions.yaml</code> and can be re-enabled by restoring the <code>linux-64</code> dict.</p>
       </section>
 
       <section id="build-numbers">
@@ -72,8 +70,7 @@
         <p>The package version is the SNAP version. Use the conda build number for packaging-only fixes:</p>
 <pre><code>13.0.0-1  Java 21 packaging fix
 13.0.0-2  Linux/headless startup defaults
-11.0.0-1  Linux/headless startup defaults
-12.0.0-1  Linux/headless startup defaults</code></pre>
+14.0.0-0  first packaging (linux-64, win-64, osx-arm64)</code></pre>
       </section>
 
       <section id="local-build">

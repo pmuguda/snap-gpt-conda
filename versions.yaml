@@ -20,10 +20,11 @@
 # s1tbx + rstb).
 #
 # Retention policy for the public sarforge channel:
-#   * SNAP 9-11: Linux only, for reproducible older workflows.
-#   * SNAP 12: Linux only.
+#   * SNAP 9-10: Linux only, for reproducible older workflows.
+#   * SNAP 11-12: UNPUBLISHED 2026-09-24 by request (recipe retained; linux-64
+#     cell nulled). Re-enable by restoring the {file, sha256} dict.
 #   * SNAP 13: Linux + Windows + Apple Silicon macOS.
-#   * SNAP 14: Linux only (current release; other subdirs may be added later).
+#   * SNAP 14: Linux + Windows + Apple Silicon macOS.
 
 base_url: https://download.esa.int/step/snap
 edition: sentinel
@@ -40,16 +41,17 @@ versions:
   # ---- 14.0.0 — Linux Sentinel installer CONFIRMED at download.esa.int/step/snap/14.0
   #      (esa-snap_sentinel_linux-14.0.0.sh, ~1.13 GB, HTTP 206). JDK from ESA's
   #      snap.install4j (javaMinVersion="21"). Linux-only for now; add win-64 /
-  #      osx-arm64 cells here if/when those builds are published.
+  #      All three subdirs CONFIRMED at download.esa.int/step/snap/14.0 (HTTP 206;
+  #      windows .exe application/octet-stream, macos_arm .dmg ~1.12 GB).
   "14.0.0":
     dir: "14.0"
     build_number: 0
     jdk: "21"
     installers:
       linux-64:   { file: esa-snap_sentinel_linux-14.0.0.sh,        sha256: null }
-      win-64:     null
+      win-64:     { file: esa-snap_sentinel_windows-14.0.0.exe,     sha256: null }
       osx-64:     null
-      osx-arm64:  null
+      osx-arm64:  { file: esa-snap_sentinel_macos_arm-14.0.0.dmg,   sha256: null }
 
   # ---- 13.0.0 — filenames CONFIRMED from step.esa.int download page (Oct 2025)
   "13.0.0":
@@ -62,24 +64,26 @@ versions:
       osx-64:     null
       osx-arm64:  { file: esa-snap_sentinel_macos_arm-13.0.0.dmg,   sha256: null }
 
-  # ---- 12.0.0 — official "All Toolboxes" Linux installer retained.
+  # ---- 12.0.0 — UNPUBLISHED 2026-09-24 by request. Recipe retained; restore the
+  #      linux-64 dict (was esa-snap_all_linux-12.0.0.sh) to re-enable.
   "12.0.0":
     dir: "12.0"
     build_number: 1     # build 0 may need the same headless/update JVM flags as 11/13
     jdk: "21"
     installers:
-      linux-64:   { file: esa-snap_all_linux-12.0.0.sh,        sha256: null }
+      linux-64:   null
       win-64:     null
       osx-64:     null
       osx-arm64:  null
 
-  # ---- 11.0.0 — official Sentinel installers; no native ARM mac build.
+  # ---- 11.0.0 — UNPUBLISHED 2026-09-24 by request. Recipe retained; restore the
+  #      linux-64 dict (was esa-snap_sentinel_linux-11.0.0.sh) to re-enable.
   "11.0.0":
     dir: "11.0"
     build_number: 1     # build 0 can crash on Linux without headless/update JVM flags
     jdk: "11"
     installers:
-      linux-64:   { file: esa-snap_sentinel_linux-11.0.0.sh,    sha256: null }
+      linux-64:   null
       win-64:     null
       osx-64:     null
       osx-arm64:  null
